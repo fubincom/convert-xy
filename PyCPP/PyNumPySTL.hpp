@@ -151,7 +151,7 @@ namespace PyCPP {
     /// @return         The pointer to the NumPy array object.
     static PyArrayObject* convert(const std::vector<FromElem> &src) {
       PyArrayObject *retval(0);
-      convert(src, retval);x
+      convert(src, retval);
       return retval;
     }
   };
