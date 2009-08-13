@@ -37,6 +37,26 @@
 
 namespace PyCPP {
 
+
+  /// A very general templated class for allocating a 2D array buffer
+  /// and pointing to it from two different data structures. Partial
+  /// template specializations should provide two member functions.
+  ///
+  /// \code
+  ///   BiAllocator<T1,T2,E,S>(const SizeSpecification &a)
+  ///   Type1 &getFirst();
+  ///   Type2 &getSecond();
+  ///   const Type1 &getFirst() const;
+  ///   const Type2 &getSecond() const;
+  /// \endcode
+  ///
+  ///
+  /// \tparam SizeSpecification  The type of the size specifier (e.g. int or pair<int, int>)
+  /// \tparam Type1              The type to convert from.
+  /// \tparam Type2              The type to convert to.
+  template <typename Type1, typename Type2, typename Elem, typename SizeSpecification>
+  struct BiAllocator {};
+
   /// A very general templated class for performing conversions
   /// between types. This is the most pervasive class of this template
   /// library. Partial template specializations of this class should

@@ -299,7 +299,7 @@ namespace PyCPP {
       return retval;
     }
   };
-    
+
   template <>
   template <int RSize, int CSize, typename ToElem>
   struct Converter<PyArrayObject*, TooN::Matrix<RSize, CSize, ToElem, TooN::Reference::RowMajor> > {
@@ -392,6 +392,78 @@ namespace PyCPP {
       }
     }
   };
+
+  template <typename Elem>
+  template <int RSize, int CSize>
+  class BiAllocator<TooN::Matrix<RSize, CSize, Elem, TooN::Reference::RowMajor>, PyArrayObject*, Elem, std::pair<int, int> > {
+
+    BiAllocator(const std::pair<int, int> &sz) : sz(sz), second(0) {
+      npy_intp dims[] = {sz.first, sz.second};
+      second = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<Elem>::type);
+      if (second == 0) {
+	throw std::string("MultiAllocator: error when allocating new NumPy array.");
+      }
+    }
+  
+    TooN::Matrix<RSize, CSize, Elem, TooN::Reference::RowMajor> &getFirst() {
+      return TooN::Matrix<RSize, CSize, Elem, TooN::Reference::RowMajor>((Elem*)second->data);
+    }
+
+    const TooN::Matrix<RSize, CSize, Elem, TooN::Reference::RowMajor> &getFirst() const {
+      return TooN::Matrix<RSize, CSize, Elem, TooN::Reference::RowMajor>((Elem*)second->data);
+    }
+
+    PyArrayObject *getSecond() {
+      return second;
+    }
+
+  ///   Type2 &getSecond();
+  ///   const Type1 &getFirst() const;
+  ///   const Type2 &getSecond() const;
+
+  private:
+    const size_t sz;
+    TooN::Matrix<RSize, CSize, Elem, TooN::Reference::RowMajor> first;
+
+    PyArrayObject *second;
+  };
+
+  template <typename Elem>
+  template <int Size>
+  class BiAllocator<TooN::Vector<Size, Elem, TooN::Reference>, PyArrayObject*, Elem, std::pair<int, int> > {
+
+    BiAllocator(const std::pair<int, int> &sz) : sz(sz), second(0) {
+      npy_intp dims[] = {sz.first, sz.second};
+      second = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<Elem>::type);
+      if (second == 0) {
+	throw std::string("MultiAllocator: error when allocating new NumPy array.");
+      }
+    }
+  
+    TooN::Vector<Size, Elem, TooN::Reference> &getFirst() {
+      return TooN::Vector<Size, Elem, TooN::Reference>((Elem*)second->data);
+    }
+
+    const TooN::Vector<Size, Elem, TooN::Reference> &getFirst() const {
+      return TooN::Vector<Size, Elem, TooN::Reference>((Elem*)second->data);
+    }
+
+    PyArrayObject *getSecond() {
+      return second;
+    }
+
+  ///   Type2 &getSecond();
+  ///   const Type1 &getFirst() const;
+  ///   const Type2 &getSecond() const;
+
+  private:
+    const size_t sz;
+    TooN::Vector<Size, Elem, TooN::Reference> first;
+
+    PyArrayObject *second;
+  };
+
+
 }
 
 #endif

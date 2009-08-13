@@ -393,7 +393,6 @@ namespace PyCPP {
       }
       return PyArray_DIM(src, 1);
     }
-
   };
 }
 
