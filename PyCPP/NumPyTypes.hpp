@@ -97,7 +97,7 @@ namespace PyCPP {
 
     /// The type of the elements stored in the NumPy array's
     /// buffer. It's either a primitive or an array of PyObject*.
-    static typedef PyObject* ElemType;
+    typedef PyObject* ElemType;
 
     /// The default case assumes the NumPy array elements are Python
     /// objects, not NumPy scalars. As such, they're converted to
@@ -176,7 +176,7 @@ namespace PyCPP {
     static const int   type = NPY_OBJECT;
     static std::string name(){ return "PyObject*"; }
     static char code() { return 'O'; }
-    static typedef PyObject* ElemType;
+    typedef PyObject* ElemType;
 
     static void toCPP(PyObject *src, PyObject *&dst) {
       // The default case assumes the NumPy array elements are Python
@@ -201,7 +201,7 @@ namespace PyCPP {
     /** The name of the corresponding NumPy dtype code as a character, which is useful for error reporting. */  \
     static char code(){ return PyType##LTR;}		\
     /** The type of each element stored in the NumPy array buffer. */  \
-    static typedef Type ElemType;			\
+    typedef Type ElemType;			\
     /** Converts a NumPy array element to a CPP array element. For simple primitive types (not PyObject*, e.g. int, float), these types are the same. */  \
     static void toCPP(const Type &src, Type &dst) {dst = src;}	\
     /** Converts a CPP array element to a NumPy array element. For simple primitive types (not PyObject*, e.g. int, float), these types are the same so a simple assignment occurs. */  \

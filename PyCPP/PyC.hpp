@@ -125,7 +125,7 @@ namespace PyCPP {
   struct CArray {
 
     /// The allocator class for elements of type <code>ChildType</code>.
-    static typedef CArray<Dims-1, ElemType, Allocator, Start+1> ChildClass;
+    typedef CArray<Dims-1, ElemType, Allocator, Start+1> ChildClass;
 
     /// Higher-dimensional C-arrays are stored as arrays of
     /// arrays. The <code>ChildType</code> is the type of elements at
@@ -134,11 +134,11 @@ namespace PyCPP {
     /// For one-dimensional arrays, <code>ChildType<code> is
     /// ElemType. For k-dimensional arrays, <code>ChildType</code> is
     /// (k-1) dimensional <code>ElemType</code> pointer.
-    static typedef typename ChildClass::MyType ChildType;
+    typedef typename ChildClass::MyType ChildType;
 
     /// A pointer to the elements stored at dimension <code>Dim</code> of
     /// an array allocated by this allocator.
-    static typedef ChildType* MyType;
+    typedef ChildType* MyType;
 
     /// Allocates a <code>Dim</code>-dimensional array of type
     /// <code>ElemType</code>.
@@ -181,7 +181,7 @@ namespace PyCPP {
 	    template <class Q> class Allocator, int Start>
   struct CArray<1, ElemType, Allocator, Start> {
 
-    static typedef ElemType* MyType;
+    typedef ElemType* MyType;
 
     static ElemType *allocate(int *sz) {
       ElemType *me = Allocator<ElemType>::allocate(sz[Start]);
@@ -217,7 +217,7 @@ namespace PyCPP {
 
   public:
     /// This should cause a compiler error.
-    static ElemType *allocate(ZeroDimensionalArraysAreNotAllowed &a);
+    static ElemType *allocate(NegativeDimensionalArraysAreNotAllowed &a);
   };
 
   /// A template specialization in case the base case array allocator
