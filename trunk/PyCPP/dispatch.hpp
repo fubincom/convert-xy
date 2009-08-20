@@ -38,44 +38,148 @@
 
 namespace PyCPP {
 
-  namespace PyTypes {
+  ///
+  /// The classes of this namespace are used for defining the structure
+  /// of a Python container.
+  ///
+  namespace Structure {
 
+    /// Defines the structure of a Python list.
+    ///
+    /// For example,
+    /// \code
+    /// using namespace Structure;
+    /// typedef List<Int> ListOfInts;
+    /// \endcode
+    /// defines a list of ints.
+    ///
+    /// \tparam T The structure of the elements of the list.
     template <class T>
-    class PyList {};
+    class List {};
 
+    /// Defines the structure of a Python tuple.
+    ///
+    /// For example,
+    /// \code
+    /// using namespace Structure;
+    /// typedef Tuple<Int> TupleOfInts;
+    /// \endcode
+    /// defines a tuple of ints.
+    ///
+    /// \tparam T The structure of the elements of the list.
     template <class T>
-    class PyTuple {};
+    class Tuple {};
 
+    /// Defines the structure of a NumPy array.
+    ///
+    /// For example,
+    /// \code
+    /// typedef Array<Float>
+    /// \endcode
+    ///
+    /// \tparam T The structure of the elements of the float.
     template <class T>
-    class PyArray {};
-  
-    template <class K, class V>
-    class PyDict {};
-
-    template <class CPP>
-    class PyDefault {};
-
-    template <>
-    template <class T>
-    class PyDefault<std::vector<T> > {
-      typedef typename PyDefault<T>::PyStructure PyElementType;
-      typedef PyList<PyElementType> PyStructure;
+    class Array {
+      typedef PyArrayObject PyObjectType;
     };
 
+    /// Defines the structure of a dictionary.
+    template <class K, class V>
+    class Dict {
+      typedef PyDictObject PyObjectType;
+    };
+
+    /// A terminal (no template arguments) structure type for python ints.
+    class Integer {
+      typedef PyIntObject PyObjectType;
+    };
+
+    /// A terminal (no template arguments) structure type for python longs.
+    class Long {
+      typedef PyLongObject PyObjectType;
+    };
+
+    /// A terminal (no template arguments) structure type for python floats.
+    class Float {
+      typedef PyFloatObject PyObjectType;
+    };
+
+    /// A terminal (no template arguments) structure type for python strings.
+    class String {
+      typedef PyStringObject PyObjectType;
+    };
+    
+    /// A terminal (no template arguments) structure type for the python none object.
+    class None {
+      typedef PyObject PyObjectType;
+    };
+
+    /// A utility class for defining the default structure of a Python compound
+    /// container given a CPP container.
+    ///
+    /// For example,
+    /// \code
+    ///   typedef map<string, vector<int> > MyMap;
+    /// \endcode
+    /// defines a type MyMap, which is just a STL map mapping strings to
+    /// integers.
+    /// 
+    /// By instantiating a Default class with the C++ type as the template,
+    /// argument, the member typedef Structure defines the default structure
+    /// of the python argument.
+    /// \code
+    ///   typedef Default<MyMap>::Structure CorrespondingPyType;
+    /// \endcode
+    template <class CPP>
+    class Default {};
+
+    /// Defines the default structure of a Python object for a STL map.
     template <>
     template <class K, class V, class C, class A>
-    class PyDefault<std::map<K, V, C, A> > {
-      typedef typename PyDefault<K>::PyStructure PyKeyType;
-      typedef typename PyDefault<V>::PyStructure PyValueType;
-      typedef PyDict<PyKeyType, PyValueType > PyStructure;
-      typedef PyDictObject PyType;
+    class Default<std::map<K, V, C, A> > {
+      typedef typename Default<K>::Structure KeyType;
+      typedef typename Default<V>::Structure ValueType;
+      typedef Dict<KeyType, ValueType > Structure;
+
+      typedef PyDictObject PyObjectType;
     };
 
+    /// Defines the default structure of a Python object for a STL vector.
     template <>
-    template <class T, int N, class B>
-    class PyDefault<TooN::Vector<N, T, B> > {
-      typedef typename PyDefault<T>::PyStructure PyElementType;
-      typedef PyArray<PyElementType> PyStructure;
+    template <class E, class A>
+    class Default<std::vector<E, A> > {
+      typedef typename Default<E>::Structure ElemType;
+      typedef List<ElemType> Structure;
+
+      typedef PyListObject PyObjectType;
+    };
+
+    /// Defines the default structure of a Python object for a TooN vector.
+    template <>
+    template <class E, int N, class B>
+    class Default<TooN::Vector<N, E, B> > {
+      typedef typename Default<E>::Structure ElemType;
+      typedef Array<ElemType> Structure;
+
+      typedef PyArrayObject PyObjectType;
+    };
+
+    /// Defines the default structure of a Python object for a TooN matrix.
+    template <>
+    template <class E, int M, int N, class B>
+    class Default<TooN::Matrix<M, N, E, B> > {
+      typedef typename Default<E>::Structure ElemType;
+      typedef Array<ElemType> Structure;
+
+      typedef PyArrayObject PyObjectType;
+    };
+
+    /// Defines the default structure of a Python object for a CVD image.
+    template <>
+    template <class T>
+    class Default<CVD::Image<T> > {
+      typedef typename Default<T>::Structure ElemType;
+      typedef Array<ElemType> Structure;
     };
   }
 
@@ -83,48 +187,61 @@ namespace PyCPP {
   /// A general templated abstract base class for converting between
   /// Python and C++ objects but only with the C++ type specified.
   ///
-  template <class CPPType, class PyStructure = PyTypes::PyDefault<CPPType> >
-  class AbstractConverterBase {
-  public:    
-    AbstractConverterBase() {}
-    ~AbstractConverterBase() {}
+  /// \tparam CPPType   The type of the C++ object.
+  /// \tparam Structure The structure of the C++ object.
+  template <class CPPType, class PyStructure = typename Structure::Default<CPPType> >
+  class ToCPPConverterBase {
+  protected:
+    /// Constructs an abstract converter.
+    ToCPPConverterBase() {}
 
+    /// Destructs an abstract converter.
+    ~ToCPPConverterBase() {}
+
+  public:
+
+    /// Converts a Python object to a C++ object (with a copy).
+    ///
+    /// @param obj    The Python object to convert.
     virtual CPPType toCPP(PyObject *obj) = 0;
+
+    /// Converts a Python object to a C++ object (without a copy).
+    ///
+    /// @param obj    The Python object to convert.
     virtual void toCPP(PyObject *obj, CPPType &cpp) = 0;
+
+    /// Converts a Python object to a C++ object. 
+    ///
+    /// @param cpp    The C++ object to convert.
     virtual PyObject* toPython(const CPPType &cpp) = 0;
-
   };
 
-  template <class CPPType, class PyStructure = PyTypes::PyDefault<CPPType> >
-  class ConverterBase : public AbstractConverterBase<CPPType> {
+  template <typename CPP, typename PyStructure = typename Structure::Default<CPP>::Structure >
+    struct ToPython {};
 
-    ConverterBase(PyTypeObject *typ) : AbstractConverterBase<CPPType>() {
-      add(typ, this);
-    }
-
-  };
-
-  template <class CPPType, class PyStructure = PyTypes::PyDefault<CPPType> >
-  class Converter2 : public ConverterBase<PyObjectType, CPPType> {
-    
-    Converter2() : ConverterBase<PyObjectType, CPPType>() {}
-
-    virtual CPPType toCPP(PyObject *obj) {
-      return Converter<PyObjectType, CPPType>::convert(obj);
-    }
-
-    virtual void toCPP(PyObject *obj, CPPType &cpp) {
-      Converter<PyObjectType, CPPType>::convert(obj, cpp);
-    }
-
-    virtual PyObject* toPython(const CPPType &cpp) {
-      return (PyObject*)Converter<CPPType, PyObjectType*>::convert(cpp);
+  template <class CPPType, class PyStructure = typename Structure::Default<CPPType>::Structure >
+  class ToCPPBase : public ToCPPBase<CPPType> {
+    ToCPPBase(PyTypeObject *typ) : ToCPPBase<CPPType>() {
     }
   };
 
 
   template <class CPPType>
-  class ConverterDispatch {
+  class ToCPP : public ToCPPBase<CPPType> {
+    
+    ToCPP() : ToCPPBase<CPPType>() {}
+
+    virtual CPPType toCPP(PyObject *obj) {
+      
+    }
+
+    virtual void toCPP(PyObject *obj, CPPType &cpp) {
+    }
+  };
+
+
+  template <class CPPType>
+  class ToCPPDispatch {
 
   public:
 
@@ -136,12 +253,12 @@ namespace PyCPP {
       return get(obj).toCPP(obj, cpp);
     }
 
-    static void add(PyTypeObject *obj, AbstractConverterBase<CPPType> &converter) {
+    static void add(PyTypeObject *obj, ToCPPBase<CPPType> &converter) {
       converters[getTypeHash(obj)] = converter;
     }
 
-    static AbstractConverterBase<CPPType> &get(long code) {
-      typename std::map<long, AbstractConverterBase<CPPType> >::iterator it(converters.find(code));
+    static ToCPPBase<CPPType> &get(long code) {
+      typename std::map<long, ToCPPBase<CPPType> >::iterator it(converters.find(code));
       if (it == converters.end()) {
         throw std::string("Can't dispatch converter function!");
       }
@@ -154,17 +271,17 @@ namespace PyCPP {
     }
 
     template <class PyTypeObject>
-    static AbstractConverterBase<CPPType> &get(PyTypeObject *typ) {
+    static ToCPPBase<CPPType> &get(PyTypeObject *typ) {
       return get(getTypeHash(typ));
     }
 
-    static AbstractConverterBase<CPPType> &get(PyObject *obj) {
+    static ToCPPBase<CPPType> &get(PyObject *obj) {
       PyTypeObject *typ = obj->ob_type;
       return get(typ);
     }
 
   private:
-    static std::map <long, AbstractConverterBase<CPPType> > converters;
+    static std::map <long, ToCPPBase<CPPType> > converters;
   };
 
 }

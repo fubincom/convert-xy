@@ -27,7 +27,7 @@
 
 #include "converter.hpp"
 #include "scalars.hpp"
-
+#include "dispatch.hpp"
 #include <vector>
 #include <map>
 #include <string>
@@ -39,6 +39,9 @@
 
 namespace PyCPP {
 
+
+  /// Convert an STL vector to a Python object.
+  ///
   template <>
   template <typename FromElem >
   struct Converter<std::vector<FromElem>, PyObject*> {
@@ -143,6 +146,52 @@ namespace PyCPP {
       }
     }
   };
+
+  template <>
+  template <typename E1, typename E2>
+  struct ToPython<std::vector<E1>, Structure::List<E2> > {
+    PyObject *toPython(const std::vector<E1> &in) {
+      PyObject *L = PyList_New(in.size());
+      for (int i = 0; i < in.size(); i++) {
+	PyList_SetItem(L, i, Py_None);
+      }
+      for (int i = 0; i < in.size(); i++) {
+	PyList_SetItem(L, i, ToPython<E1, E2>(in));
+      }
+      return L;
+    }
+  };
+
+  template <>
+  template <typename E1, typename E2>
+  struct ToPython<std::vector<E1>, Structure::Tuple<E2> > {
+    PyObject *toPython(const std::vector<E1> &in) {
+      PyObject *Tup = PyTuple_New(in.size());
+      for (int i = 0; i < in.size(); i++) {
+	PyTuple_SetItem(Tup, i, Py_None);
+      }
+      for (int i = 0; i < in.size(); i++) {
+	PyTuple_SetItem(Tup, i, ToPython<E1, E2>(in));
+      }
+      return Tup;
+    }
+  };
+
+  template <>
+  template <typename KeyElem, typename ValueElem, typename Comparator, typename PyKey, typename PyValue >
+  struct ToPython<std::map<KeyElem, ValueElem, Comparator>, Structure::Dict<PyKey, PyValue> > {
+    PyObject *toPython(const std::map<KeyElem, ValueElem, Comparator> &src) {
+      PyObject *D = PyDict_New();
+      for (typename std::map<KeyElem, ValueElem, Comparator>::const_iterator it(src.begin());
+	   it != src.end(); it++) {
+	PyDict_SetItem(D,
+		       ToPython<KeyElem, PyKey>::toPython(it->first),
+		       ToPython<ValueElem, PyValue>::toPython(it->second));
+      }
+      return D;
+    }
+  };
+
 }
 
 #endif
