@@ -37,7 +37,6 @@
 
 namespace PyCPP {
 
-
   /// A very general templated class for allocating a 2D array buffer
   /// and pointing to it from two different data structures. Partial
   /// template specializations should provide two member functions.
@@ -56,6 +55,11 @@ namespace PyCPP {
   /// \tparam Type2              The type to convert to.
   template <typename Type1, typename Type2, typename Elem, typename SizeSpecification>
   struct BiAllocator {};
+
+  /// A class just used for generating a compiler error when no
+  /// converter can be found.
+  template <class From, class To>
+  struct NoConverterForTypes;
 
   /// A very general templated class for performing conversions
   /// between types. This is the most pervasive class of this template
@@ -81,7 +85,9 @@ namespace PyCPP {
   /// \tparam From    The type to convert from.
   /// \tparam To      The type to convert to.
   template <typename From, typename To>
-  struct Converter {};
+  struct Converter {
+    NoConverterForTypes<From, To> converter_not_found;
+  };
 
   /// The identity conversion class for converting from a PyObject*
   /// to a PyObject*.
@@ -115,7 +121,8 @@ namespace PyCPP {
   /// the function inspects the run-time type of the Python object and
   /// invokes the converter function for that type.
   ///
-  /// This class needs a major overhaul.
+  /// This specific specialiation class needs a major overhaul, which
+  /// is in progress (see dispatch.hpp).
   template <typename T>
   struct Converter<PyObject*, T> {
 
