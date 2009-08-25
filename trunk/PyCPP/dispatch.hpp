@@ -30,6 +30,7 @@
 #include <map>
 #include <string>
 #include <TooN/TooN.h>
+#include <cvd/image.h>
 
 ///
 /// The PyCPP namespace encapsulates templated functions and classes
