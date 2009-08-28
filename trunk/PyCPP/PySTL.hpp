@@ -40,7 +40,7 @@
 namespace PyCPP {
 
 
-  /// Convert an STL vector to a Python object.
+  /// Convert an STL vector.
   ///
   template <>
   template <typename FromElem >
