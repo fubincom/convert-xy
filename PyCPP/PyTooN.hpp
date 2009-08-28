@@ -387,7 +387,7 @@ namespace PyCPP {
       NumPyElemType *rdata = (NumPyElemType*)dst->data;
       for (int i = 0; i < src.num_rows(); i++) {
 	for (int j = 0; j < src.num_cols(); j++, rdata++) {
-	  NumPyType<FromElem>::toNumPy(src(i, j), rdata[i]);
+	  NumPyType<FromElem>::toNumPy(src(i, j), *rdata);
 	}
       }
     }

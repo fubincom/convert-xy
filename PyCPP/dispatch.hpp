@@ -190,14 +190,14 @@ namespace PyCPP {
   ///
   /// \tparam CPPType   The type of the C++ object.
   /// \tparam Structure The structure of the C++ object.
-  template <class CPPType, class PyStructure = typename Structure::Default<CPPType> >
-  class ToCPPConverterBase {
+  template <class CPPType>
+  class ToCPPBase {
   protected:
     /// Constructs an abstract converter.
-    ToCPPConverterBase() {}
+    ToCPPBase() {}
 
     /// Destructs an abstract converter.
-    ~ToCPPConverterBase() {}
+    ~ToCPPBase() {}
 
   public:
 
@@ -217,35 +217,62 @@ namespace PyCPP {
     virtual PyObject* toPython(const CPPType &cpp) = 0;
   };
 
-  template <typename CPP, typename PyStructure = typename Structure::Default<CPP>::Structure >
-    struct ToPython {};
-
-  template <class CPPType, class PyStructure = typename Structure::Default<CPPType>::Structure >
-  class ToCPPBase : public ToCPPBase<CPPType> {
-    ToCPPBase(PyTypeObject *typ) : ToCPPBase<CPPType>() {
-    }
+  template <class CPPType, class PyType>
+  class ToCPPBaseWithPyType : public ToCPPBase<CPPType> {
+  public:
+    ToCPPBaseWithPyType() {}
   };
 
-
+  /// Serves a purpose only at compile-time for identifying
+  /// when a to-python converter function could not be found.
   template <class CPPType>
-  class ToCPP : public ToCPPBase<CPPType> {
-    
-    ToCPP() : ToCPPBase<CPPType>() {}
+  class CannotConvertToPython;
 
-    virtual CPPType toCPP(PyObject *obj) {
-      
-    }
+  template <typename CPP, typename PyStructure = typename Structure::Default<CPP>::Structure >
+  struct ToPython { CannotConvertToPython<CPP> no_converter_found; };
 
-    virtual void toCPP(PyObject *obj, CPPType &cpp) {
+  /// Serves a purpose only at compile-time for identifying
+  /// when a to-c++ converter function could not be found.
+  template <class CPPType, class PyType>
+  class CannotConvertToCPP;
+
+  template <class CPPType, class PyType>
+  class ToCPP { CannotConvertToCPP<CPPType, PyType> no_converter_found; };
+
+  /**
+  template <>
+  template <class T>
+  class ToCPP<std::vector<T>, PyListObject*> : public ToCPPBaseWithPyType<CPPType, PyList*> {
+    ToCPP() : ToCPPBaseWithPyType<CPPType, PyListObject*> {}
+
+    virtual void convert(PyObject *obj, std::vector <T> &cpp) {
+      cpp.clear();
+      const int n = PyList_Size(obj);
+      for (int i = 0; i < n; i++) {
+	PyObject *pitem = PyList_GetItem(obj, i);
+	toCPP(pitem);
+	dst.push_back(toCPP(item));
+      }
     }
   };
+  **/
 
-
+  /// Stores all conversion functions capable of converting a Python
+  /// type to a CPPType. The converters are keyed with the unique
+  /// hash of the Python type object.
+  ///
+  /// \tparam CPPType The type of the C++ object.
   template <class CPPType>
   class ToCPPDispatch {
 
   public:
-
+    /// Converts the Python object <code>obj</code> to a C++
+    /// object of type <code>CPPType</code>. If an appropriate
+    /// converter cannot be found, an exception is thrown.
+    ///
+    /// @param obj The Python object to convert.
+    ///
+    /// @return The converted C++ object.
     static CPPType toCPP(PyObject *obj) {
       return get(obj).toCPP(obj);
     }
@@ -255,12 +282,17 @@ namespace PyCPP {
     }
 
     static void add(PyTypeObject *obj, ToCPPBase<CPPType> &converter) {
-      converters[getTypeHash(obj)] = converter;
+      converters()[getTypeHash(obj)] = converter;
+    }
+
+    static std::map<long, ToCPPBase<CPPType> > &converters() {
+      std::map<long, ToCPPBase<CPPType> > *c = new std::map<long, ToCPPBase<CPPType> >();
+      return *c;
     }
 
     static ToCPPBase<CPPType> &get(long code) {
-      typename std::map<long, ToCPPBase<CPPType> >::iterator it(converters.find(code));
-      if (it == converters.end()) {
+      typename std::map<long, ToCPPBase<CPPType> >::iterator it(converters().find(code));
+      if (it == converters().end()) {
         throw std::string("Can't dispatch converter function!");
       }
       return it->second;
@@ -282,8 +314,18 @@ namespace PyCPP {
     }
 
   private:
-    static std::map <long, ToCPPBase<CPPType> > converters;
+    //static std::map<long, ToCPPBase<CPPType> > converters;
   };
+
+  template <class CPPType>
+  CPPType toCPP(PyObject *obj) {
+    return ToCPPDispatch<CPPType>::convert(obj);
+  }
+
+  template <class CPPType>
+  void toCPP(PyObject *obj, CPPType &cpp) {
+    ToCPPDispatch<CPPType>::convert(obj, cpp);
+  }
 
 }
 
