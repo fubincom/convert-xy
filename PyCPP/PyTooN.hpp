@@ -123,7 +123,6 @@ namespace PyCPP {
     }
   };
 
-
   /// A template specialization class for copying the contents of a
   /// one-dimensional NumPy array into a reference TooN::Vector (or)
   /// copying the NumPy buffer pointer so it is shared by a reference

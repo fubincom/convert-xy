@@ -26,6 +26,7 @@
 /// \author Damian Eads
 
 #include <Python.h>
+#include "NumPyTypes.hpp"
 #include "converter.hpp"
 #include "scalars.hpp"
 #include <cvd/image.h>
@@ -179,9 +180,6 @@ namespace PyCPP {
       }
       int nrows = src->dimensions[0];
       int ncols = src->dimensions[1];
-      if (dst.size().y != nrows && dst.size().x != ncols) {
-	throw std::string("Image size mismatch!");
-      }
       if (dst.data() == 0 && NumPyType<ToElem>::type == NPY_OBJECT && !NumPyType<ToElem>::isCPPArrayOfPyObjects()) {
 	throw std::string("CVD::BasicImage cannot use a NumPy PyObject array buffer as its memory buffer unless CVD::BasicImage<T==PyObject*>!");
       }
@@ -192,15 +190,18 @@ namespace PyCPP {
 	if (!PyArray_ISCONTIGUOUS(src)) {
 	  throw std::string("The NumPy array passed must be contiguous!");
 	}
-	dst = CVD::BasicImage<ToElem>((ToElem*)src->data, CVD::ImageRef(nrows, ncols));
+	dst = CVD::BasicImage<ToElem>((ToElem*)src->data, CVD::ImageRef(ncols, nrows));
       }
       else {
+	if (dst.size().y != nrows && dst.size().x != ncols) {
+	  throw std::string("Image size mismatch!");
+	}
 	if (PyArray_ISCONTIGUOUS(src)) {
 	  typedef typename NumPyType<ToElem>::ElemType ElemType;
 	  ElemType *rdata = (ElemType*)src->data;
-	  for (int i = 0, k = 0; i < nrows; i++) {
-	    for (int j = 0; j < ncols; j++, k++) {
-	      NumPyType<ToElem>::toCPP(rdata[k], dst[CVD::ImageRef(j, i)]);
+	  for (int y = 0, k = 0; y < nrows; y++) {
+	    for (int x = 0; x < ncols; x++, k++) {
+	      NumPyType<ToElem>::toCPP(rdata[k], dst[y][x]);
 	    }
 	  }
 	}
@@ -228,25 +229,36 @@ namespace PyCPP {
 
   };
 
-  /**
-  template <>
-  template <typename FromElem>
-  struct Converter<CVD::SubImage<FromElem>, PyArrayObject*> {
-    static void convert(const CVD::SubImage<FromElem> &src, PyArrayObject *&dst) {
-      npy_intp a[] = {src.size().y, src.size().x};
-      dst = (PyArrayObject*)PyArray_SimpleNew(2, a, NumPyType<FromElem>::type);
-      if (dst == 0) {
-	throw std::string("Error when trying to allocate new NumPy array.");
-      }
-      typename NumPyType<FromElem>::ElemType *rdata
-	= (typename NumPyType<FromElem>::ElemType*)dst->data;
-      for (int i = 0; i < src.size().y; i++) {
-	for (int j = 0; j < src.size().x; j++, rdata++) {
-	  NumPyType<FromElem>::toPython(src[CVD::ImageRef(j, i)], *rdata);
-	}
+  template <typename Elem>
+  class BiAllocator<CVD::BasicImage<Elem>, PyArrayObject*, Elem, std::pair<int, int> > {
+
+  public:
+    BiAllocator(const std::pair<int, int> &sz) : sz(sz), second(0) {
+      npy_intp dims[] = {sz.second, sz.first};
+      second = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<Elem>::type);
+      if (second == 0) {
+	throw std::string("MultiAllocator: error when allocating new NumPy array.");
       }
     }
-    };**/
+  
+    CVD::BasicImage<Elem> getFirst() {
+      return CVD::BasicImage<Elem>((Elem*)second->data, CVD::ImageRef(sz.first, sz.second));
+    }
+
+    PyArrayObject *getSecond() {
+      return second;
+    }
+
+  ///   Type2 &getSecond();
+  ///   const Type1 &getFirst() const;
+  ///   const Type2 &getSecond() const;
+
+  private:
+    const std::pair<size_t, size_t> sz;
+
+    PyArrayObject *second;
+  };
+
 }
 
 #endif
