@@ -29,6 +29,7 @@
 
 #include <string>
 #include <numpy/arrayobject.h>
+#include "converter_not_found.hpp"
 
 ///
 /// The PyCPP namespace encapsulates templated functions and classes
@@ -55,11 +56,6 @@ namespace PyCPP {
   /// \tparam Type2              The type to convert to.
   template <typename Type1, typename Type2, typename Elem, typename SizeSpecification>
   struct BiAllocator {};
-
-  /// A class just used for generating a compiler error when no
-  /// converter can be found.
-  template <class From, class To>
-  struct NoConverterForTypes;
 
   /// A very general templated class for performing conversions
   /// between types. This is the most pervasive class of this template

@@ -30,6 +30,7 @@
 #include "converter.hpp"
 #include "scalars.hpp"
 #include <cvd/image.h>
+#include <vector>
 
 ///
 /// The PyCPP namespace encapsulates templated functions and classes
