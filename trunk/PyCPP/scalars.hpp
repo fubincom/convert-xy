@@ -202,8 +202,20 @@ namespace PyCPP {
     typedef D next;
   };
 
-  typedef TypeList<float,
-		   TypeList<double, End> > FloatTypes;
+  typedef TypeList<double,
+		   TypeList<float, End> > FloatTypes;
+
+  typedef TypeList<double,
+          TypeList<float,
+	  TypeList<int,
+	  TypeList<unsigned char,
+	  TypeList<char,
+	  TypeList<long,
+          TypeList<long long,
+	  TypeList<short,
+	  TypeList<unsigned int,
+	  TypeList<unsigned long,
+	  TypeList<unsigned long long, End> > > > > > > > > > > NumberTypes;
 
 }
 

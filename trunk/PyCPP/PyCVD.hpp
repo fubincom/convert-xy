@@ -49,7 +49,7 @@ namespace PyCPP {
 	throw std::string("Error when allocating numpy array of locations.");
       }
       int *rdata = (int*)dst->data;
-      for (int i = 0; i < src.size(); i++) {
+      for (size_t i = 0; i < src.size(); i++) {
 	rdata[i*2] = src[i].y;
 	rdata[i*2+1] = src[i].x;
       }
