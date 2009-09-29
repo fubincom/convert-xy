@@ -336,6 +336,12 @@ namespace PyCPP {
       return len(src);
     }
   };
+
+  template <class PX, class PY>
+  class PyPointerCast {
+
+    CannotSafelyCast<PX, PY> python_cast_unsupported;
+  };
 }
 
 #endif
