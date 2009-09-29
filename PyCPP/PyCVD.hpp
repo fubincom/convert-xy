@@ -253,6 +253,102 @@ namespace PyCPP {
 
   };
 
+
+  template <>
+  template <typename FromElem>
+  struct Converter<CVD::BasicImage<FromElem>, PyObject*> {
+
+    static void convert(const CVD::BasicImage<FromElem> &src, PyObject *&dstt) {
+      int nrows = src.size().y;
+      int ncols = src.size().x;
+
+      npy_intp dims[] = {nrows, ncols};
+
+      PyArrayObject *dst = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<FromElem>::type);
+      dstt = dst;
+      if (dst == 0) {
+	throw std::string("MultiAllocator: error when allocating new NumPy array.");
+      }
+      typedef typename NumPyType<FromElem>::ElemType ElemType;
+      ElemType *rdata = (ElemType*)dst->data;
+      for (int y = 0, k = 0; y < nrows; y++) {
+	for (int x = 0; x < ncols; x++, k++) {
+	  NumPyType<FromElem>::toCPP(src[y][x], rdata[k]);
+	}
+      }
+    }
+
+    static PyObject *convert(CVD::BasicImage<FromElem> &in) {
+      PyObject *out(0);
+      convert(in, out);
+      return out;
+    }
+  };
+
+
+  template <>
+  template <typename FromElem>
+  struct Converter<CVD::Image<FromElem>, PyObject*> {
+
+    static void convert(const CVD::Image<FromElem> &src, PyObject *&dstt) {
+      int nrows = src.size().y;
+      int ncols = src.size().x;
+
+      npy_intp dims[] = {nrows, ncols};
+
+      PyArrayObject *dst = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<FromElem>::type);
+      dstt = (PyObject*)dst;
+      if (dst == 0) {
+	throw std::string("MultiAllocator: error when allocating new NumPy array.");
+      }
+      typedef typename NumPyType<FromElem>::ElemType ElemType;
+      ElemType *rdata = (ElemType*)dst->data;
+      for (int y = 0, k = 0; y < nrows; y++) {
+	for (int x = 0; x < ncols; x++, k++) {
+	  NumPyType<FromElem>::toCPP(src[y][x], rdata[k]);
+	}
+      }
+    }
+
+    static PyObject *convert(const CVD::Image<FromElem> &in) {
+      PyObject *out(0);
+      convert(in, out);
+      return out;
+    }
+  };
+
+
+  /**
+  template <>
+  template <typename FromElem>
+  struct Converter<CVD::Image<FromElem>, PyArrayObject*> {
+
+    static void convert(const CVD::Image<FromElem> &src, PyArrayObject *&dst) {
+      int nrows = src.size().y;
+      int ncols = src.size().x;
+
+      npy_intp dims[] = {nrows, ncols};
+      dst = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<FromElem>::type);
+      if (dst == 0) {
+	throw std::string("MultiAllocator: error when allocating new NumPy array.");
+      }
+      typedef typename NumPyType<FromElem>::ElemType ElemType;
+      ElemType *rdata = (ElemType*)dst->data;
+      for (int y = 0, k = 0; y < nrows; y++) {
+	for (int x = 0; x < ncols; x++, k++) {
+	  NumPyType<FromElem>::toCPP(src[y][x], rdata[k]);
+	}
+      }
+    }
+
+    static CVD::Image<FromElem> convert(PyArrayObject *src) {
+      CVD::Image<FromElem> retval((FromElem*)0, CVD::ImageRef(cols(src), rows(src)));
+      convert(src, retval);
+      return retval;
+    }
+  };
+  **/
+
   template <typename Elem>
   class BiAllocator<CVD::BasicImage<Elem>, PyArrayObject*, Elem, std::pair<int, int> > {
 
