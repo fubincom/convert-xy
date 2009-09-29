@@ -30,6 +30,7 @@
 #include <string>
 #include <numpy/arrayobject.h>
 #include "converter_not_found.hpp"
+#include "cannot_cast.hpp"
 
 ///
 /// The PyCPP namespace encapsulates templated functions and classes
@@ -339,8 +340,65 @@ namespace PyCPP {
 
   template <class PX, class PY>
   class PyPointerCast {
-
     CannotSafelyCast<PX, PY> python_cast_unsupported;
+  };
+
+  template <class PY>
+  PY py_cast(PyObject *obj) {
+    return PyPointerCast<PyObject*, PY>::cast(obj);
+  };
+
+  template <>
+  class PyPointerCast<PyObject *, PyListObject *> {
+  public:
+    static PyListObject *cast(PyObject *obj) {
+      if (PyList_Check(obj)) {
+	return (PyListObject*)obj;
+      }
+      else {
+	throw std::string("Object must be a Python list!");
+      }
+    }
+  };
+
+  template <>
+  class PyPointerCast<PyObject *, PyDictObject *> {
+  public:
+    static PyDictObject *cast(PyObject *obj) {
+      if (PyDict_Check(obj)) {
+	return (PyDictObject*)obj;
+      }
+      else {
+	throw std::string("Object must be a Python dictionary!");
+      }
+    }
+  };
+
+
+  template <>
+  class PyPointerCast<PyObject *, PyTupleObject *> {
+  public:
+    static PyTupleObject *cast(PyObject *obj) {
+      if (PyTuple_Check(obj)) {
+	return (PyTupleObject*)obj;
+      }
+      else {
+	throw std::string("Object must be a Python tuple!");
+      }
+    }
+  };
+
+  template <>
+  class PyPointerCast<PyObject *, PyArrayObject *> {
+  public:
+    static PyArrayObject *cast(PyObject *obj) {
+      if (PyArray_Check(obj)) {
+	return (PyArrayObject*)obj;
+      }
+      else {
+	throw std::string("Object must be a Python array!");
+      }
+    }
   };
 }
 
