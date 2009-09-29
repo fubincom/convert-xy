@@ -265,7 +265,7 @@ namespace PyCPP {
       npy_intp dims[] = {nrows, ncols};
 
       PyArrayObject *dst = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<FromElem>::type);
-      dstt = dst;
+      dstt = (PyObject*)dst;
       if (dst == 0) {
 	throw std::string("MultiAllocator: error when allocating new NumPy array.");
       }
