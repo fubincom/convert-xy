@@ -1,5 +1,5 @@
-#ifndef TESLA_INTERFACE_HPP
-#define TESLA_INTERFACE_HPP
+#ifndef CONVERTXY_PYPLOTTING_HPP
+#define CONVERTXY_PYPLOTTING_HPP
 
 #include <iostream>
 #include <sstream>
@@ -71,7 +71,6 @@ namespace Tesla {
       PyDict_DelItemString(getScope(), s.c_str());
       checkPyError();
     }
-
     
     static int initializePython() {
       Py_Initialize();
