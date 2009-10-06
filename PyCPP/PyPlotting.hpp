@@ -12,9 +12,9 @@
 #include "Python.h"
 #include <numpy/arrayobject.h>
 
-#include <PyCPP/PyCVD.hpp>
-#include <PyCPP/PyTooN.hpp>
-#include <PyCPP/PySTL.hpp>
+#include "PyCVD.hpp"
+#include "PyTooN.hpp"
+#include "PySTL.hpp"
 //#include <CXX/WrapPython.h>
 //#include <CXX/Objects.hxx>
 
