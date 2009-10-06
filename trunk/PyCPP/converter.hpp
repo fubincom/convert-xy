@@ -400,6 +400,20 @@ namespace PyCPP {
       }
     }
   };
+
+
+  template <>
+  class PyPointerCast<PyObject *, PyStringObject *> {
+  public:
+    static PyStringObject *cast(PyObject *obj) {
+      if (PyString_Check(obj)) {
+	return (PyStringObject*)obj;
+      }
+      else {
+	throw std::string("Object must be a Python string!");
+      }
+    }
+  };
 }
 
 #endif
