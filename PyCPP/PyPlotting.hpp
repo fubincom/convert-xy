@@ -85,6 +85,7 @@ namespace Tesla {
     static int initializeGGFE() {
       run("try:\n  import ggfe.image_features\nexcept ImportError:\n  print 'ggfe could not be imported!'");
       run("image_grammar = ggfe.image_features.get_image_grammar()");
+      return 0;
     }
 
     template <class T>
