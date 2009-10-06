@@ -19,14 +19,15 @@
 //#include <CXX/Objects.hxx>
 
 
-namespace Tesla {
+namespace PyCPP {
 
   using namespace CVD;
   using namespace std;
   using namespace TooN;
   using namespace PyCPP;
 
-  namespace PyInterface {
+  namespace Plotting {
+
     static void checkPyError(const string &ran = "") {
       if (PyErr_Occurred()) {
 	if (ran == "") {
