@@ -40,6 +40,32 @@
 namespace PyCPP {
 
   template <>
+  struct Converter<std::set<CVD::ImageRef>, PyArrayObject*> {
+    static void convert(const std::set <CVD::ImageRef> &src,
+			PyArrayObject *&dst) {
+      npy_intp dims[] = {src.size(), 2};
+      dst = (PyArrayObject*)PyArray_SimpleNew(2, dims, NumPyType<int>::type);
+      if (dst == 0) {
+	throw std::string("Error when allocating numpy array of locations.");
+      }
+      int *rdata = (int*)dst->data;
+      int i = 0;
+      for (std::set<CVD::ImageRef>::const_iterator it(src.begin()); it != src.end(); it++) {
+	rdata[i*2] = (*it).y;
+	rdata[i*2+1] = (*it).x;
+	i++;
+      }
+    }
+
+    static PyArrayObject* convert(const std::set<CVD::ImageRef> &src) {
+      PyArrayObject *retval;
+      convert(src, retval);
+      return retval;
+    }
+  };
+
+
+  template <>
   struct Converter<std::vector<CVD::ImageRef>, PyArrayObject*> {
     static void convert(const std::vector <CVD::ImageRef> &src,
 			PyArrayObject *&dst) {

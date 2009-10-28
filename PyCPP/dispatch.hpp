@@ -326,7 +326,6 @@ namespace PyCPP {
   void toCPP(PyObject *obj, CPPType &cpp) {
     ToCPPDispatch<CPPType>::convert(obj, cpp);
   }
-
 }
 
 #endif

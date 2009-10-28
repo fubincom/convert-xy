@@ -88,6 +88,11 @@ namespace PyCPP {
       return 0;
     }
 
+    static int initializeGGFEDiagnostics() {
+      run("try:\n  import ggfe.random_features\nexcept ImportError:\n  print 'ggfe.random_features could not be imported!'");
+      return 0;
+    }
+
     template <class T>
     static void imshow(const BasicImage <T> &x, string cmap = "") {
       PyObject *_in = 0;
@@ -112,6 +117,22 @@ namespace PyCPP {
       run("mpl.imshow(_in);");
       delvar("_in");
     }
+
+
+    static void plot(const vector <ImageRef> &pts, string comp = "") {
+      PyObject *_pts = 0;
+      convert(pts, (PyArrayObject*&)_pts);
+      setvar("_pts", _pts);
+      ostringstream out;
+      out << "mpl.plot(_pts[:,1], _pts[:,0] ";
+      if (comp != "") {
+	out << ", '" << comp << "'";
+      }
+      out << ")";
+      run(out.str());
+      delvar("_pts");
+    }
+
 
     template <int N, class T, class B>
     static void plot(const Vector <N, T, B> &x, string comp = "") {
@@ -244,6 +265,48 @@ namespace PyCPP {
       run("del fid");
       run("del centroids");
       return cents;
+    }
+
+    template <class TW>
+    static void artificial_hits(const ImageRef &sz, const set<ImageRef> &centers, double hit_spread_max,
+				int num_misses, int num_false_alarms, int hits_per_detection,
+				map<TW, vector<ImageRef>, std::greater<TW> > &hit_map) {
+      ostringstream ostr;
+      PyArrayObject *_centers(0);
+      convert(centers, _centers);
+      setvar("centers", (PyObject*)_centers);
+      ostr << "(hits, confidences) = ggfe.random_feautres.artificial_hits("
+	   << "[" << sz.y << ", " << sz.x << "], "
+	   << "centers, "
+	   << "hit_spread_max=" << hit_spread_max << ", "
+	   << "num_misses=" << num_misses << ", "
+	   << "num_false_alarms=" << num_false_alarms << ", "
+	   << "hits_per_detection=" << hits_per_detection << ")";
+
+      run(ostr.str());
+      vector<ImageRef> hits;
+
+      PyArrayObject *_hits(0);
+      PyArrayObject *_confidences(0);
+
+      _hits = (PyArrayObject*)getvar("hits");
+      _confidences = (PyArrayObject*)getvar("confidences");
+
+      convert(_hits, hits);
+
+      Vector<-1, double> confidences(hits.size());
+
+      convert(_confidences, confidences);
+
+      //map<TW, vector<ImageRef>, std::greater<TW> > hit_map;
+
+      for (int i = 0; i < confidences.size(); i++) {
+	hit_map[confidences[i]].push_back(hits[i]);
+      }
+
+      delvar("centers");
+      delvar("hits");
+      delvar("confidences");
     }
   }
   //  };
