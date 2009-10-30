@@ -275,7 +275,7 @@ namespace PyCPP {
       PyArrayObject *_centers(0);
       convert(centers, _centers);
       setvar("centers", (PyObject*)_centers);
-      ostr << "(hits, confidences) = ggfe.random_feautres.artificial_hits("
+      ostr << "(hits, confidences) = ggfe.random_features.artificial_hits("
 	   << "[" << sz.y << ", " << sz.x << "], "
 	   << "centers, "
 	   << "hit_spread_max=" << hit_spread_max << ", "

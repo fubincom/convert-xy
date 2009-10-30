@@ -31,6 +31,7 @@
 #include "scalars.hpp"
 #include <cvd/image.h>
 #include <vector>
+#include <set>
 
 ///
 /// The PyCPP namespace encapsulates templated functions and classes
