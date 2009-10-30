@@ -89,7 +89,7 @@ namespace PyCPP {
     }
 
     static int initializeGGFEDiagnostics() {
-      run("try:\n  import ggfe.random_features\nexcept ImportError:\n  print 'ggfe.random_features could not be imported!'");
+      run("try:\n  import ggfe.random_hypotheses\nexcept ImportError:\n  print 'ggfe.random_hypotheses could not be imported!'");
       return 0;
     }
 
@@ -133,6 +133,19 @@ namespace PyCPP {
       delvar("_pts");
     }
 
+    static void plot(const set <ImageRef> &pts, string comp = "") {
+      PyObject *_pts = 0;
+      convert(pts, (PyArrayObject*&)_pts);
+      setvar("_pts", _pts);
+      ostringstream out;
+      out << "mpl.plot(_pts[:,1], _pts[:,0] ";
+      if (comp != "") {
+	out << ", '" << comp << "'";
+      }
+      out << ")";
+      run(out.str());
+      delvar("_pts");
+    }
 
     template <int N, class T, class B>
     static void plot(const Vector <N, T, B> &x, string comp = "") {
@@ -259,6 +272,7 @@ namespace PyCPP {
     static vector<ImageRef> parse_centroid_file(const string &fn) {
       run("fid = open('" + fn + "')");
       run("centroids = np.asarray(eval(fid.readlines()[0]), dtype='i')");
+      run("centroids = centroids[:,::-1].copy()");
       vector <ImageRef> cents;
       convert((PyArrayObject*)getvar("centroids"), cents);
       run("fid.close()");
@@ -275,7 +289,7 @@ namespace PyCPP {
       PyArrayObject *_centers(0);
       convert(centers, _centers);
       setvar("centers", (PyObject*)_centers);
-      ostr << "(hits, confidences) = ggfe.random_features.artificial_hits("
+      ostr << "(hits, confidences) = ggfe.random_hypotheses.artificial_hits("
 	   << "[" << sz.y << ", " << sz.x << "], "
 	   << "centers, "
 	   << "hit_spread_max=" << hit_spread_max << ", "
