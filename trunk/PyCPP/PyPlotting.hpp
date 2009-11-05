@@ -283,7 +283,7 @@ namespace PyCPP {
 
     template <class TW>
     static void artificial_hits(const ImageRef &sz, const set<ImageRef> &centers, double hit_spread_max,
-				int num_misses, int num_false_alarms, int hits_per_detection,
+				double dr, double far, int hits_per_detection,
 				map<TW, vector<ImageRef>, std::greater<TW> > &hit_map) {
       ostringstream ostr;
       PyArrayObject *_centers(0);
@@ -293,8 +293,8 @@ namespace PyCPP {
 	   << "[" << sz.y << ", " << sz.x << "], "
 	   << "centers, "
 	   << "hit_spread_max=" << hit_spread_max << ", "
-	   << "num_misses=" << num_misses << ", "
-	   << "num_false_alarms=" << num_false_alarms << ", "
+	   << "dr=" << dr << ", "
+	   << "far=" << far << ", "
 	   << "hits_per_detection=" << hits_per_detection << ")";
 
       run(ostr.str());
