@@ -275,6 +275,11 @@ namespace PyCPP {
       run("centroids = centroids[:,::-1].copy()");
       vector <ImageRef> cents;
       convert((PyArrayObject*)getvar("centroids"), cents);
+      for (size_t i = 0; i < cents.size(); i++) {
+	int temp = cents[i].x;
+	cents[i].x = cents[i].y;
+	cents[i].y = temp;
+      }
       run("fid.close()");
       run("del fid");
       run("del centroids");
