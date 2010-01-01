@@ -195,7 +195,7 @@ namespace PyCPP {
     }
   };
 
-  struct End{};
+  struct TypeListEnd{};
 
   template<class C, class D> struct TypeList {
     typedef C type;
@@ -203,7 +203,7 @@ namespace PyCPP {
   };
 
   typedef TypeList<double,
-		   TypeList<float, End> > FloatTypes;
+		   TypeList<float, TypeListEnd> > FloatTypes;
 
   typedef TypeList<double,
           TypeList<float,
@@ -215,7 +215,7 @@ namespace PyCPP {
 	  TypeList<short,
 	  TypeList<unsigned int,
 	  TypeList<unsigned long,
-	  TypeList<unsigned long long, End> > > > > > > > > > > NumberTypes;
+	  TypeList<unsigned long long, TypeListEnd> > > > > > > > > > > NumberTypes;
 
 }
 
