@@ -84,7 +84,9 @@ namespace PyCPP {
 
     static int initializeGGFE() {
       run("try:\n  import ggfe.image_features\nexcept ImportError:\n  print 'ggfe could not be imported!'");
-      run("image_grammar = ggfe.image_features.get_image_grammar()");
+      run("grammars = {}");
+      run("grammars['main'] = ggfe.image_features.get_image_grammar()");
+      run("grammars['haar'] = ggfe.image_features.get_haar_grammar()");
       return 0;
     }
 
@@ -240,9 +242,13 @@ namespace PyCPP {
       run(out.str());
     }
 
-    static string ggfe_generate_random_feature() {
+    static string ggfe_generate_random_feature(const string &grammar="main") {
       string retval;
-      run("fstr = str(image_grammar.Feature(ggfe.Variable('IMG')))");
+      ostringstream ostr;
+      ostr << "fstr = str(grammars['"
+	   << grammar
+	   << "'].Feature(ggfe.Variable('IMG')))";
+      run(ostr.str());
       PyObject *fstr(0);
       fstr = getvar("fstr");
       convert(PyCPP::py_cast<PyStringObject*>(fstr), retval);
@@ -259,7 +265,10 @@ namespace PyCPP {
       convert(in, (PyObject*&)_in);
       setvar("IMG", (PyObject*)_in);
       setvar("PS", (PyObject*)_s);
-      run("RESULT = np.asarray(ggfe.image_features.evaluate_feature(image_grammar, PS, IMG), dtype='d')");
+      ostringstream ostr;
+      ostr << "RESULT = np.asarray(ggfe.image_features.evaluate_feature("
+	   << "PS, IMG), dtype='d')" << endl;
+      run(ostr.str());
       PyArrayObject *_out = PyCPP::py_cast<PyArrayObject*>(getvar("RESULT"));
       convert(_out, result);
       //imshow(result);
@@ -275,11 +284,11 @@ namespace PyCPP {
       run("centroids = centroids[:,::-1].copy()");
       vector <ImageRef> cents;
       convert((PyArrayObject*)getvar("centroids"), cents);
-      for (size_t i = 0; i < cents.size(); i++) {
+      /**for (size_t i = 0; i < cents.size(); i++) {
 	int temp = cents[i].x;
 	cents[i].x = cents[i].y;
 	cents[i].y = temp;
-      }
+	}**/
       run("fid.close()");
       run("del fid");
       run("del centroids");
