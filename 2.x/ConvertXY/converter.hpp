@@ -211,8 +211,8 @@ namespace ConvertXY {
 
   template <class CPPType, class CopyAction, int r>
   struct DispatchPopulator {
-    static void populate_dispatch_map(ToCPPDispatch<CPPType, CopyAction> &d) {
-      DispatchPopulator<CPPType, CopyAction, r - 1>::populate_dispatch_map(d);
+    static void populate_dispatch_map() {
+      DispatchPopulator<CPPType, CopyAction, r - 1>::populate_dispatch_map();
     }
   };
 
