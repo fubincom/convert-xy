@@ -415,6 +415,32 @@ namespace ConvertXY {
       /**DefaultToCPPConvertActionUnresolved<npy_scalar_pyobject_type*, npy_scalar_ctype> f;**/ \
     } \
     virtual bool isImplemented() const { return true; } \
+  }; \
+  template <> \
+  struct ConvertToCPP<std::string, npy_scalar_pyobject_type*, Copy<> >	\
+    : public ConvertToCPPBase<std::string, Copy<> > {				\
+    ConvertToCPP() {} \
+    void convert(PyObject *src, std::string &dst) const {		      \
+      npy_scalar_pyobject_type *obj((npy_scalar_pyobject_type *)src); \
+      ostringstream ostr; \
+      ostr << obj->obval; \
+      dst = ostr.str(); \
+    } \
+    virtual bool isImplemented() const { return true; } \
+  };
+
+#define CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER_STRING(npy_scalar_type_object, npy_scalar_pyobject_type, npy_scalar_ctype, npy_structure) \
+  template <> \
+  struct ConvertToCPP<std::string, npy_scalar_pyobject_type*, Copy<> >	\
+    : public ConvertToCPPBase<std::string, Copy<> > {				\
+    ConvertToCPP() {} \
+    void convert(PyObject *src, std::string &dst) const {		      \
+      npy_scalar_pyobject_type *obj((npy_scalar_pyobject_type *)src); \
+      ostringstream ostr; \
+      ostr << obj->obval; \
+      dst = ostr.str(); \
+    } \
+    virtual bool isImplemented() const { return true; } \
   };
 
 

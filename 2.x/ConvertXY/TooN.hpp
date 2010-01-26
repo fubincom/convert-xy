@@ -2,6 +2,11 @@
 #define CONVERTXY_TOON_HPP
 
 #include <TooN/TooN.h>
+
+#include "converter.hpp"
+#include "numpy_scalars.hpp"
+#include "holder.hpp"
+
 #include <vector>
 #include <sstream>
 
