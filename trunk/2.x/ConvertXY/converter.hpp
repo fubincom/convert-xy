@@ -379,6 +379,13 @@ namespace ConvertXY {
     }
   };
 
+  template <bool IsPrimitive>
+  struct Zero<std::string, IsPrimitive> {
+    static std::string zero() {
+      return "";
+    }
+  };
+
   template <class T>
   struct Zero<T, true> {
     static T zero() {

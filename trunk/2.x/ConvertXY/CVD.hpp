@@ -118,14 +118,13 @@ namespace ConvertXY {
 	  }
 	}      
       }
+      else {
+	throw Py::RuntimeError("ToCPP<Image<T>, Py::Sequence>: NumPy array must be two dimensional!");
+      }
     }
-    else {
-      throw Py::RuntimeError("ToCPP<Image<T>, Py::Sequence>: NumPy array must be two dimensional!");
-    }
-  }
- 
-  template <class WalkableTypeList>
-  void walk_type_list(PyObject *src, Image<T> &dst) const {
+    
+    template <class WalkableTypeList>
+    void walk_type_list(PyObject *src, Image<T> &dst) const {
       typedef typename WalkableTypeList::Head HeadType;
       if (PyArray_TYPE(src) == NumPyType<HeadType>::numpy_code) {
 	if (PyArray_NDIM(src) == 2) {
