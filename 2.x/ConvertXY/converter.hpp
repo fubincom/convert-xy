@@ -34,6 +34,11 @@
 #ifndef CONVERTXY_CONVERTER_HPP
 #define CONVERTXY_CONVERTER_HPP
 
+// \internal Because Python <= 2.5 does not have a Py_TYPE(obj) declaration.
+#ifndef Py_TYPE
+#define Py_TYPE(o) ((o)->ob_type)
+#endif
+
 #include <map>
 #include <vector>
 #include <string>
