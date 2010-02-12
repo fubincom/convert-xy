@@ -50,6 +50,7 @@ namespace ConvertXY {
  template <> \
    struct Primitive<type, 0> { static const bool primitive = true; };
 
+  CONVERT_XY_PRIM_TO_CPP_DEFAULTS(bool);
   CONVERT_XY_PRIM_TO_CPP_DEFAULTS(unsigned char);
   CONVERT_XY_PRIM_TO_CPP_DEFAULTS(char);
   CONVERT_XY_PRIM_TO_CPP_DEFAULTS(unsigned int);
@@ -71,6 +72,7 @@ namespace ConvertXY {
     typedef pystruct Structure; \
   };
 
+  CONVERT_XY_PRIM_TO_PYTHON_DEFAULTS(bool,                PyInt);
   CONVERT_XY_PRIM_TO_PYTHON_DEFAULTS(unsigned char,       PyInt);
   CONVERT_XY_PRIM_TO_PYTHON_DEFAULTS(unsigned int,        PyInt);
   CONVERT_XY_PRIM_TO_PYTHON_DEFAULTS(unsigned short,      PyInt);
@@ -84,7 +86,7 @@ namespace ConvertXY {
   CONVERT_XY_PRIM_TO_PYTHON_DEFAULTS(float,               PyFloat);
   CONVERT_XY_PRIM_TO_PYTHON_DEFAULTS(double,              PyFloat);
 
-#define CONVERT_XY_SCALAR_CONVERTER(ctype, pystruct, pycxxtype, casttype)	\
+#define CONVERT_XY_SCALAR_CONVERTER(ctype, pystruct, pycxxtype, casttype) \
   template <> \
   struct ConvertToPython<ctype, pystruct> { \
     static PyObject* convert(const ctype &val) { \
@@ -109,18 +111,19 @@ namespace ConvertXY {
   };
 
 
-#define CONVERT_XY_NONCOMPLEX_TO_COMPLEX_SCALAR_CONVERTER(ctype, pycxxtype, casttype)	\
+#define CONVERT_XY_NONCOMPLEX_TO_COMPLEX_SCALAR_CONVERTER(ctype, pycxxtype, casttype) \
   template <> \
-  struct ConvertToCPP<std::complex<ctype>, pycxxtype, Copy<> >	\
-    : public ConvertToCPPBase<std::complex<ctype>, Copy<> > {	\
+  struct ConvertToCPP<std::complex<ctype>, pycxxtype, Copy<> > \
+    : public ConvertToCPPBase<std::complex<ctype>, Copy<> > { \
     ConvertToCPP() {} \
-    void convert(PyObject *src, std::complex<ctype> &dst) const {	\
+    void convert(PyObject *src, std::complex<ctype> &dst) const { \
       pycxxtype el(src); \
       dst = (ctype)(casttype)el;		\
     } \
     virtual bool isImplemented() const { return true; } \
   };
 
+  CONVERT_XY_SCALAR_CONVERTER(bool,                PyInt, Py::Int, long);
   CONVERT_XY_SCALAR_CONVERTER(unsigned char,       PyInt, Py::Int, long);
   CONVERT_XY_SCALAR_CONVERTER(unsigned int,        PyInt, Py::Int, long);
   CONVERT_XY_SCALAR_CONVERTER(unsigned short,      PyInt, Py::Int, long);
@@ -137,6 +140,7 @@ namespace ConvertXY {
   CONVERT_XY_NONCOMPLEX_TO_COMPLEX_SCALAR_CONVERTER(double,Py::Int, double);
   CONVERT_XY_NONCOMPLEX_TO_COMPLEX_SCALAR_CONVERTER(long double,Py::Int, long double);
 
+  CONVERT_XY_SCALAR_CONVERTER(bool,                PyLong, Py::Long, long);
   CONVERT_XY_SCALAR_CONVERTER(unsigned char,       PyLong, Py::Long, long);
   CONVERT_XY_SCALAR_CONVERTER(unsigned int,        PyLong, Py::Long, long);
   CONVERT_XY_SCALAR_CONVERTER(unsigned short,      PyLong, Py::Long, long);
@@ -260,6 +264,7 @@ namespace ConvertXY {
     virtual bool isImplemented() const { return true; }\
   };
 
+  CONVERT_XY_STRING_TO_INT_PRIM(bool);
   CONVERT_XY_STRING_TO_INT_PRIM(float);
   CONVERT_XY_STRING_TO_INT_PRIM(double);
   CONVERT_XY_STRING_TO_INT_PRIM(char);
