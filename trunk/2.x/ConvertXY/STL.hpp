@@ -174,9 +174,11 @@ namespace ConvertXY {
     virtual ~ConvertToCPP() {}
     
     virtual void convert(PyObject *src, vector<ElemType, Allocator> &dst) const {
+      cerr << "hi!" << endl;
       Py::Sequence seq(src);
 
       for (size_t i = 0; i < seq.size(); i++) {
+	cerr << ".";
 	Py::Object obj(seq[i]);
 	ConvertToCPPBase<ElemType, ElemAction> &converter(ToCPPDispatch<ElemType, ElemAction>::getConverter(obj.ptr()));
 	if (Primitive<ElemType>::primitive) {
@@ -215,6 +217,7 @@ namespace ConvertXY {
     virtual ~ConvertToCPP() {}
     
     virtual void convert(PyObject *src, vector<ElemType, Allocator> &dst) const {
+      cerr << "hello!" << endl;
       PyObject *iterator = PyObject_GetIter(src);
       Py::Object pit(iterator, true); // so the iterator gets deleted when we're done
 

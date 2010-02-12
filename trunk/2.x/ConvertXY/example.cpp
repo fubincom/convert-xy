@@ -2,9 +2,7 @@
 
 #include "converter.hpp"
 #include "STL.hpp"
-#include "TooN.hpp"
 #include "holder.hpp"
-#include "CVD.hpp"
 
 #include <CXX/Objects.hxx>
 
