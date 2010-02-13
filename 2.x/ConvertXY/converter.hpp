@@ -34,6 +34,8 @@
 #ifndef CONVERTXY_CONVERTER_HPP
 #define CONVERTXY_CONVERTER_HPP
 
+#include <Python.h>
+
 // \internal Because Python <= 2.5 does not have a Py_TYPE(obj) declaration.
 #ifndef Py_TYPE
 #define Py_TYPE(o) ((o)->ob_type)
@@ -225,8 +227,8 @@ namespace ConvertXY {
 
   template <class CPPType, class CopyAction, int r>
   struct DispatchPopulator {
-    static void populate_dispatch_map(ToCPPDispatch<CPPType, CopyAction> &d) {
-      DispatchPopulator<CPPType, CopyAction, r - 1>::populate_dispatch_map(d);
+    static void populate_dispatch_map() {
+      DispatchPopulator<CPPType, CopyAction, r - 1>::populate_dispatch_map();
     }
   };
 
