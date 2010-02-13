@@ -14,7 +14,7 @@ using ConvertXY::PyString;
 
 void initialize() {
   Py_Initialize();
-  import_array();
+  //import_array();
 }
 
 int main() {
