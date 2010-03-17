@@ -79,6 +79,7 @@ namespace PyCPP {
       //Py::Dict foo;
       run("import matplotlib.pylab as mpl");
       run("import numpy as np");
+      run("from numpy import inf, nan");
       return 0;
     }
 
@@ -87,6 +88,7 @@ namespace PyCPP {
       run("grammars = {}");
       run("grammars['main'] = ggfe.image_features.get_image_grammar()");
       run("grammars['haar'] = ggfe.image_features.get_haar_grammar()");
+      run("grammars['haar-str'] = ggfe.image_features.get_haar_string_grammar()");
       return 0;
     }
 
