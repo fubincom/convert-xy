@@ -207,6 +207,10 @@ namespace PyCPP {
       run("mpl.colorbar()");
     }
 
+    static void clf() {
+      run("mpl.clf()");
+    }
+
     static void figure(int i = -1) {
       if (i == -1) {
 	run("mpl.figure()");
