@@ -139,19 +139,21 @@ namespace ConvertXY {
   };
 
 
-  template <class PyType>
-  template <class HeldType, class HeldAction>
+  //template <class PyType>
+  template <>
+  template <class PyType, class HeldType, class HeldAction>
   struct ConvertToCPP<Holder<HeldType>, PyType, Allocate<HeldAction> >
     : public ConvertToCPPBase<Holder<HeldType>, Allocate<HeldAction> > {
 
     ConvertToCPP() {}
     
-    void convert(PyObject *src, Holder<HeldType> &dst) {
+    void convert(PyObject *src, Holder<HeldType> &dst) const {
+      cerr << "Holder!" << endl;
       ConvertToCPPBase<HeldType, HeldAction> &converter(ToCPPDispatch<HeldType, HeldAction>::getConverter(src));
       vector <size_t> dimensions(converter.getSize(src));
       void *buffer_ptr = converter.getBufferPointer(src);
       dst.own(ObjectFactory<HeldType>::create_ptr(dimensions, buffer_ptr));
-      converter.convert(dst[dst.size()-1], dst.getReference());
+      converter.convert(src, dst.getReference());
     }
   };
 
