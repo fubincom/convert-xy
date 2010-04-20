@@ -281,6 +281,10 @@ namespace PyCPP {
       //show();
       delvar("IMG");
       delvar("PS");
+      delvar("RESULT");
+      Py_XDECREF(_in);
+      Py_XDECREF(_s);
+      //Py_XDECREF(_out);
       return result;
     }
 
