@@ -547,14 +547,14 @@ namespace ConvertXY {
   class ObjectFactory<Vector<Size, ElemType, Reference> > {
 
   public:
-    static Vector<Size, ElemType, RowMajor> create(const vector <size_t> &dimensions, void *bufferPtr = 0) {
+    static Vector<Size, ElemType, Reference> create(const vector <size_t> &dimensions, void *bufferPtr = 0) {
       check(dimensions);
-      return Vector<Size, ElemType, RowMajor>((ElemType*)bufferPtr, dimensions[0], dimensions[1]);
+      return Vector<Size, ElemType, Reference>((ElemType*)bufferPtr, dimensions[0]);
     }
-
-    static Vector<Size, ElemType, RowMajor>* create_ptr(const vector <size_t> &dimensions, void *bufferPtr = 0) {
+      
+    static Vector<Size, ElemType, Reference>* create_ptr(const vector <size_t> &dimensions, void *bufferPtr = 0) {
       check(dimensions);
-      return new Vector<Size, ElemType, RowMajor>((ElemType*)bufferPtr, dimensions[0], dimensions[1]);
+      return new Vector<Size, ElemType, Reference>((ElemType*)bufferPtr, dimensions[0]);
     }
 
   private:
