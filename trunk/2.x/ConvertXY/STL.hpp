@@ -42,9 +42,20 @@ namespace ConvertXY {
 
   using namespace std;
 
+  /// type strings for STL types: useful for run-time stringification of types.
+
+  CONVERTXY_DEFINE_TYPE_STRING_TT(vector, "std::vector");
+  CONVERTXY_DEFINE_TYPE_STRING_T(less, "std::less");
+  CONVERTXY_DEFINE_TYPE_STRING_T(greater, "std::greater");
+  CONVERTXY_DEFINE_TYPE_STRING_TTT(map, "std::map");
+  CONVERTXY_DEFINE_TYPE_STRING_TTT(multimap, "std::multimap");
+  CONVERTXY_DEFINE_TYPE_STRING_TTT(set, "std::set");
+  CONVERTXY_DEFINE_TYPE_STRING_T(allocator, "std::allocator");
+
   ///////////////////////////////////////////////////////////////////////////////
   /////////////// STL map conversion
   ///////////////////////////////////////////////////////////////////////////////
+
 
   template <class KeyType, class ValueType, class Compare, class Allocator, class BA>
   struct DefaultToCPPConvertAction<std::map<KeyType, ValueType, Compare, Allocator>, BA > {

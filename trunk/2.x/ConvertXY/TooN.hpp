@@ -32,6 +32,15 @@ namespace ConvertXY {
 
   };
 
+CONVERTXY_DEFINE_TYPE_STRING_IITT(Matrix, "TooN::Matrix")
+CONVERTXY_DEFINE_TYPE_STRING_ITT(Vector, "TooN::Vector")
+
+CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::Internal::VBase, "VBase")
+CONVERTXY_DEFINE_TYPE_STRING_I(TooN::Internal::SliceVBase, "SliceVBase")
+CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::Reference, "Reference")
+CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::RowMajor, "RowMajor")
+CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
+
   template <int NElems, class ElemType, class Layout>
   class CannotCreateTooNVectorObjectFactory;
 

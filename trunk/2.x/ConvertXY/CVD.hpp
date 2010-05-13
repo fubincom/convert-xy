@@ -45,6 +45,11 @@ namespace ConvertXY {
   using namespace std;
   using namespace CVD;
 
+  CONVERTXY_DEFINE_TYPE_STRING_T(BasicImage, "CVD::BasicImage");
+  CONVERTXY_DEFINE_TYPE_STRING_T(Image, "CVD::Image");
+  CONVERTXY_DEFINE_TYPE_STRING_T(SubImage, "CVD::SubImage");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(ImageRef, "CVD::ImageRef");
+
   template <class T>
   struct Zero<BasicImage<T>, false > {
     static BasicImage<T> zero() {
