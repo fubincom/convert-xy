@@ -153,7 +153,7 @@ namespace ConvertXY {
     
     virtual void convert(PyObject *src, Holder<HeldType> &dst) const {
       //HeldAction h(5);
-      cerr << "Holder!" << endl;
+      //cerr << "Holder!" << endl;
       ConvertToCPPBase<HeldType, HeldAction> &converter(ToCPPDispatch<HeldType, HeldAction>::getConverter(src));
       vector <size_t> dimensions(converter.getSize(src));
       void *buffer_ptr = converter.getBufferPointer(src);
