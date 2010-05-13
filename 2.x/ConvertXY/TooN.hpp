@@ -218,7 +218,7 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
       else {
 	typedef typename WalkableTypeList::Tail TailType;
 	if (IsEnd<TailType>::end) {
-	  throw Py::TypeError("ConvertXY: No way to convert type");
+	  throw Py::TypeError("ConvertXY: No way to convert type " + TypeString<TailType>::str());
 	}
 	else {
 	  // to make the static type-checker happy.
@@ -233,7 +233,7 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
 	convert_object_array(src, dst);
       }
       else if (PyArray_TYPE(src) < NPY_OBJECT) {
-	walk_type_list<NumPyFloatTypes>(src, dst);
+	walk_type_list<NumPyNumberTypes>(src, dst);
       }
       else {
 	throw Py::TypeError("NumPy type code not understood!");
@@ -425,7 +425,7 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
       else {
 	typedef typename WalkableTypeList::Tail TailType;
 	if (IsEnd<TailType>::end) {
-	  throw Py::TypeError("ConvertXY: No way to convert type");
+	  throw Py::TypeError("ConvertXY: No way to convert type " + TypeString<TailType>::str());
 	}
 	else {
 	  // to make the static type-checker happy.
@@ -440,7 +440,7 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
 	convert_object_array(src, dst);
       }
       else if (PyArray_TYPE(src) < NPY_OBJECT) {
-	walk_type_list<NumPyFloatTypes>(src, dst);
+	walk_type_list<NumPyNumberTypes>(src, dst);
       }
       else {
 	throw Py::TypeError("NumPy type code not understood!");

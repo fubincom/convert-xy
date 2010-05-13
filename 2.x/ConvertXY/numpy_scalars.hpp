@@ -505,54 +505,63 @@ namespace ConvertXY {
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyBoolArrType_Type, PyBoolScalarObject, npy_bool, NumPyBool);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_bool, NumPyBool);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_bool);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_bool, "npy_bool", 1);
 #endif
 #ifdef NPY_UINT8
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_uint8 , NPY_UINT8, PyUInt8ArrType_Type, "np.uint8");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyUInt8ArrType_Type, PyUInt8ScalarObject, npy_uint8, NumPyUInt8);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_uint8, NumPyUInt8);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_uint8);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_uint8, "npy_uint8", 1);
 #endif
 #ifdef NPY_INT8
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_int8  , NPY_INT8, PyInt8ArrType_Type, "np.int8");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyInt8ArrType_Type, PyInt8ScalarObject, npy_int8, NumPyInt8);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_int8, NumPyInt8);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_int8);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_int8, "npy_int8", 1);
 #endif
 #ifdef NPY_UINT16
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_uint16, NPY_UINT16, PyUInt16ArrType_Type, "np.uint16");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyUInt16ArrType_Type, PyUInt16ScalarObject, npy_uint16, NumPyUInt16);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_uint16, NumPyUInt16);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_uint16);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_uint16, "npy_uint16", 1);
 #endif
 #ifdef NPY_INT16
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_int16 , NPY_INT16, PyInt16ArrType_Type, "np.int16");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyInt16ArrType_Type, PyInt16ScalarObject, npy_int16, NumPyInt16);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_int16, NumPyInt16);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_int16);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_int16, "npy_int16", 1);
 #endif
 #ifdef NPY_UINT32
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_uint32, NPY_UINT32, PyUInt32ArrType_Type, "np.uint32");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyUInt32ArrType_Type, PyUInt32ScalarObject, npy_uint32, NumPyUInt32);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_uint32, NumPyUInt32);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_uint32);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_uint32, "npy_uint32", 1);
 #endif
 #ifdef NPY_INT32
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_int32 , NPY_INT32, PyInt32ArrType_Type, "np.int32");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyInt32ArrType_Type, PyInt32ScalarObject, npy_int32, NumPyInt32);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_int32, NumPyInt32);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_int32);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_int32, "npy_int32", 1);
 #endif
 #ifdef NPY_UINT64
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_uint64, NPY_UINT64, PyUInt64ArrType_Type, "np.uint64");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyUInt64ArrType_Type, PyUInt64ScalarObject, npy_uint64, NumPyUInt64);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_uint64, NumPyUInt64);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_uint64);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_uint64, "npy_uint64", 1);
 #endif
 #ifdef NPY_INT64
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_int64 , NPY_INT64, PyInt64ArrType_Type, "np.int64");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyInt64ArrType_Type, PyInt64ScalarObject, npy_int64, NumPyInt64);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_int64, NumPyInt64);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_int64);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_int64, "npy_int64", 1);
 #ifdef NPY_FLOAT64
   CONVERTXY_DEFINE_NUMPY_NONCOMPLEX_TO_COMPLEX_SCALAR_CONVERTER(PyComplex128ArrType_Type, PyInt64ScalarObject, PyComplex128ScalarObject, npy_complex128, npy_int64, NumPyInt64);
 #endif
@@ -562,8 +571,10 @@ namespace ConvertXY {
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyFloat32ArrType_Type, PyFloat32ScalarObject, npy_float32, NumPyFloat32);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_float32, NumPyFloat32);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_float32);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_float32, "npy_float32", 1);
 
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_complex64, NPY_COMPLEX64, PyComplex64ArrType_Type, "np.cfloat64");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_complex64, "npy_complex64", 1);
   CONVERTXY_DEFINE_NUMPY_COMPLEX_SCALAR_CONVERTER(PyComplex64ArrType_Type, PyComplex64ScalarObject, npy_complex64, npy_float32, NumPyFloat32);
   CONVERTXY_DEFINE_DEFAULT_NPY_COMPLEX_TOPYTHON_CONVERT_ACTION(npy_float32, NumPyComplex64);
   CONVERTXY_DEFINE_DEFAULT_NPY_COMPLEX_TOCPP_CONVERT_ACTION(npy_float32);
@@ -573,8 +584,10 @@ namespace ConvertXY {
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyFloat64ArrType_Type, PyFloat64ScalarObject, npy_float64, NumPyFloat64);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_float64, NumPyFloat64);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_float64);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_float64, "npy_float64", 1);
 
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_complex128, NPY_COMPLEX128, PyComplex128ArrType_Type, "np.cfloat128");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_complex128, "npy_complex128", 1);
   CONVERTXY_DEFINE_NUMPY_COMPLEX_SCALAR_CONVERTER(PyComplex128ArrType_Type, PyComplex128ScalarObject, npy_complex128, npy_float64, NumPyComplex128);
   CONVERTXY_DEFINE_NUMPY_NONCOMPLEX_TO_COMPLEX_SCALAR_CONVERTER(PyComplex128ArrType_Type, PyFloat64ScalarObject, PyComplex128ScalarObject, npy_complex128, npy_float64, NumPyFloat64);
   CONVERTXY_DEFINE_DEFAULT_NPY_COMPLEX_TOPYTHON_CONVERT_ACTION(npy_float64, NumPyComplex128);
@@ -586,22 +599,26 @@ namespace ConvertXY {
   CONVERTXY_DEFINE_NUMPY_NONCOMPLEX_TO_COMPLEX_SCALAR_CONVERTER(PyComplex128ArrType_Type, PyFloat96ScalarObject, PyComplex192ScalarObject, npy_complex192, npy_float96, NumPyComplex192);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_float96, NumPyFloat96);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_float96);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_float96, "npy_float96", 1);
 
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_complex192, NPY_COMPLEX192, PyComplex192ArrType_Type, "np.cfloat192");
   CONVERTXY_DEFINE_NUMPY_COMPLEX_SCALAR_CONVERTER(PyComplex192ArrType_Type, PyComplex192ScalarObject, npy_complex192, npy_float96, NumPyComplex192);
   CONVERTXY_DEFINE_DEFAULT_NPY_COMPLEX_TOPYTHON_CONVERT_ACTION(npy_float96, NumPyComplex192);
   CONVERTXY_DEFINE_DEFAULT_NPY_COMPLEX_TOCPP_CONVERT_ACTION(npy_float96);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_complex192, "npy_complex192", 1);
 #endif
 #ifdef NPY_FLOAT128
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_float128, NPY_FLOAT128, PyFloat128ArrType_Type, "np.float128");
   CONVERTXY_DEFINE_NUMPY_SCALAR_CONVERTER(PyFloat128ArrType_Type, PyFloat128ScalarObject, npy_float128, NumPyFloat128);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOPYTHON_CONVERT_ACTION(npy_float128, NumPyFloat128);
   CONVERTXY_DEFINE_DEFAULT_NPY_TOCPP_CONVERT_ACTION(npy_float128);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_float128, "npy_float128", 1);
 
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(npy_complex256, NPY_COMPLEX256, PyComplex256ArrType_Type, "np.cfloat256");
   CONVERTXY_DEFINE_NUMPY_COMPLEX_SCALAR_CONVERTER(PyComplex256ArrType_Type, PyComplex256ScalarObject, npy_complex256, npy_float128, NumPyComplex256);
   CONVERTXY_DEFINE_DEFAULT_NPY_COMPLEX_TOPYTHON_CONVERT_ACTION(npy_float128, NumPyComplex256);
   CONVERTXY_DEFINE_DEFAULT_NPY_COMPLEX_TOCPP_CONVERT_ACTION(npy_float128);
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING_LAYER(npy_complex256, "npy_complex256", 1);
 #endif
 #ifdef NPY_OBJECT
   CONVERTXY_DEFINE_NUMPY_TYPE_CORRESPONDENCE(PyObject*, NPY_OBJECT, PyObjectArrType_Type, "np.object_");
@@ -628,6 +645,34 @@ namespace ConvertXY {
     virtual bool isImplemented() const { return true; }
   };
 
+#endif
+
+#if defined(NPY_INT8) && defined(NPY_INT16) && defined(NPY_INT32) && defined(NPY_INT64)
+
+  typedef TypeList<npy_int8,
+		   TypeList<npy_uint8,
+			    TypeList<npy_int16,
+				     TypeList<npy_uint16,
+					      TypeList<npy_int32,
+						       TypeList<npy_uint32,
+								TypeList<npy_int64,
+									 TypeList<npy_uint64, TypeListEnd> > > > > > > > NumPyIntTypes;
+
+#elif defined(NPY_INT8) && !defined(NPY_INT16) && defined(NPY_INT32) && defined(NPY_INT64)
+
+  typedef TypeList<npy_int8,
+		   TypeList<npy_uint8,
+			    TypeList<npy_int32,
+				     TypeList<npy_uint32,
+					      TypeList<npy_int64,
+						       TypeList<npy_uint64, TypeListEnd> > > > > > NumPyIntTypes;
+
+#elif defined(NPY_INT8) && !defined(NPY_INT16) && defined(NPY_INT32) && !defined(NPY_INT64)
+
+  typedef TypeList<npy_int8,
+		   TypeList<npy_uint8,
+			    TypeList<npy_int32,
+				     TypeList<npy_uint32, TypeListEnd> > > > NumPyIntTypes;
 #endif
 
 #if defined(NPY_FLOAT96) && defined(NPY_FLOAT128)
@@ -697,6 +742,8 @@ namespace ConvertXY {
   };
 
   typedef Splice<NumPyFloatTypes, NumPyComplexTypes>::List NumPyFloatComplexTypes;
+
+  typedef Splice<NumPyIntTypes, NumPyFloatTypes>::List NumPyNumberTypes;
 
 }
 
