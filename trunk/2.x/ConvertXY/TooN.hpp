@@ -112,7 +112,7 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
 
     void convert(PyObject *src, Matrix<Rows, Cols, ElemType, Reference::RowMajor> &dst) const {
       if (PyArray_TYPE(src) != NumPyType<ElemType>::numpy_code) {
-	throw Py::RuntimeError("ConvertXY: type unsupported for reuse conversion to BasicImage.");
+	throw Py::RuntimeError("ConvertXY: type unsupported for reuse conversion to TooN::Matrix.");
       }
       vector <size_t> sz(getSize(src));
       if (sz.size() != 2) {
@@ -475,7 +475,7 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
 
     void convert(PyObject *src, Vector<Size, ElemType, Reference> &dst) const {
       if (PyArray_TYPE(src) != NumPyType<ElemType>::numpy_code) {
-	throw Py::RuntimeError("ConvertXY: type unsupported for reuse conversion to BasicImage.");
+	throw Py::RuntimeError("ConvertXY: type unsupported for reuse conversion to TooN::Vector.");
       }
       vector <size_t> sz(getSize(src));
       if (sz.size() != 1) {
@@ -505,8 +505,8 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
       vector <size_t> sz;
       Py::Sequence seq(src);
       const size_t ndims = PyArray_NDIM(src);
-      if (ndims != 2) {
-	throw Py::RuntimeError("only exactly two dimensional arrays may be converted to TooN matrices.");
+      if (ndims != 1) {
+	throw Py::RuntimeError("only one-dimensional arrays may be converted to TooN matrices.");
       }
       for (size_t i = 0; i < ndims; i++) {
 	sz.push_back(PyArray_DIM(src, i));
