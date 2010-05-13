@@ -140,7 +140,6 @@ namespace ConvertXY {
     typedef Allocate<HeldAction> Action;
   };
 
-
   //template <class PyType>
 
   //template <>
@@ -160,6 +159,17 @@ namespace ConvertXY {
       void *buffer_ptr = converter.getBufferPointer(src);
       dst.own(ObjectFactory<HeldType>::create_ptr(dimensions, buffer_ptr));
       converter.convert(src, dst.getReference());
+    }
+
+    virtual bool isImplemented() const { return true; }
+
+    void *getBufferPointer(PyObject *obj) const {
+      return 0;
+    }
+
+    virtual vector <size_t> getSize(PyObject *src) const {
+      vector <size_t> sz;
+      return sz;
     }
   };
 
