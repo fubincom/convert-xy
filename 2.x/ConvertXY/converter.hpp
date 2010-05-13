@@ -47,6 +47,8 @@
 
 #include <CXX/Objects.hxx>
 
+#include "type_string.hpp"
+
 namespace ConvertXY {
 
   using namespace std;
@@ -77,6 +79,13 @@ namespace ConvertXY {
 
   class NIL{};
 
+  template <int Layer>
+  struct TypeString<NIL, Layer> {
+    static const string str() {
+      return "NIL";
+    }
+  };
+
   template <class ElemStructure>
   class PyList {};
 
@@ -99,6 +108,27 @@ namespace ConvertXY {
   class PyFloat {};
   class PyIteratorProtocol {};
 
+  CONVERTXY_DEFINE_TYPE_STRING_T(PyList, "PyList");
+  CONVERTXY_DEFINE_TYPE_STRING_T(PyTuple, "PyTuple");
+  CONVERTXY_DEFINE_TYPE_STRING_T(PySet, "PySet");
+  CONVERTXY_DEFINE_TYPE_STRING_TT(PyDict, "PyDict");
+  CONVERTXY_DEFINE_TYPE_STRING_TT(PyArray, "PyArray");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(PyString, "PyString");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(PyFloat, "PyFloat");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(PyLong, "PyLong");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(PyInt, "PyInt");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(PyIteratorProtocol, "PyIteratorProtocol");
+  CONVERTXY_DEFINE_TYPE_STRING_T(Py::SeqBase, "Py::SeqBase");
+  CONVERTXY_DEFINE_TYPE_STRING_T(Py::MapBase, "Py::MapBase");
+
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(Py::Object, "Py::Object");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(Py::String, "Py::String");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(Py::Float, "Py::Float");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(Py::Long, "Py::Long");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(Py::Int, "Py::Int");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(Py::Complex, "Py::Complex");
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(string, "string");
+
   /**template <class Head, class Tail>
   struct TypeCons {
     typedef Head head;
@@ -107,15 +137,31 @@ namespace ConvertXY {
 
   typedef TypeCons<PyList_Type, NIL> PythonTypes;**/
 
+  template <>
+  template <int Layer>
+  struct NilZip<NIL, Layer> {
+    static const string str() {
+      return "";
+    }
+
+    static const string first_str() {
+      return "";
+    }
+  };
+
   // Allocate: don't reuse any buffers from the source. Allocate a new buffer in the target.
   template <class X1 = NIL, class X2 = NIL, class X3 = NIL,
 	    class X4 = NIL, class X5 = NIL, class X6 = NIL>
   struct Allocate {};
 
+  CONVERTXY_DEFINE_TYPE_STRING_TTTTTT_NIL_ZIP(Allocate, "Allocate");
+
   // Reuse: reuse the buffer (ie copy the buffer pointer) from the source.
   template <class X1 = NIL, class X2 = NIL, class X3 = NIL,
 	    class X4 = NIL, class X5 = NIL, class X6 = NIL>
   struct Reuse {};
+
+  CONVERTXY_DEFINE_TYPE_STRING_TTTTTT_NIL_ZIP(Reuse, "Reuse");
 
   // Copy: don't reuse any buffers from the source. Use the target's
   // existing buffer and copy the data values from the source into it,
@@ -124,6 +170,8 @@ namespace ConvertXY {
 	    class X4 = NIL, class X5 = NIL, class X6 = NIL>
   struct Copy {};
 
+  CONVERTXY_DEFINE_TYPE_STRING_TTTTTT_NIL_ZIP(Copy, "Copy");
+
   // Copy: don't reuse any buffers from the source. Allocate the target's
   // buffer and copy the data values from the source into it,
   // performing necessary type conversion if necessary.
@@ -131,14 +179,20 @@ namespace ConvertXY {
 	    class X4 = NIL, class X5 = NIL, class X6 = NIL>
   struct AllocateCopy {};
 
+  CONVERTXY_DEFINE_TYPE_STRING_TTTTTT_NIL_ZIP(AllocateCopy, "AllocateCopy");
+
   // Check that the size of the containers are the same.
   template <class X1 = NIL, class X2 = NIL, class X3 = NIL,
 	    class X4 = NIL, class X5 = NIL, class X6 = NIL>
   struct CheckSize {};
 
+  CONVERTXY_DEFINE_TYPE_STRING_TTTTTT_NIL_ZIP(CheckSize, "CheckSize");
+
   // Check that each key element from the Python mapping
   // exists in the C++ map
   struct CheckExists {};
+
+  CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(CheckExists, "CheckExists");
 
   template <class CPPType>
   struct DefaultDefaultBufferAction {
@@ -291,7 +345,11 @@ namespace ConvertXY {
 	  return *(it_it->second);
 	}
 	else {
-	  throw Py::TypeError("Cannot dispatch converter.");
+	  ostringstream ostr;
+	  ostr << "Cannot dispatch converter! " << endl
+	       << "  C++ type    : " << TypeString<CPPType>::str() << endl
+	       << "  Copy action : " << TypeString<CopyAction>::str() << endl;
+	  throw Py::TypeError(ostr.str());
 	}
       }
       return *(it->second);

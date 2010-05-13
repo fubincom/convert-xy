@@ -131,6 +131,8 @@ namespace ConvertXY {
     T *val;
   };
 
+  CONVERTXY_DEFINE_TYPE_STRING_T(Holder, "Holder");
+
   template <class T, class BA>
   struct DefaultToCPPConvertAction<Holder<T>, BA> {
     typedef DefaultToCPPConvertAction<T, BA> HeldClass;
@@ -140,14 +142,18 @@ namespace ConvertXY {
 
 
   //template <class PyType>
+
+  //template <>
   template <>
-  template <class PyType, class HeldType, class HeldAction>
+  template <class HeldType, class PyType, class HeldAction>
   struct ConvertToCPP<Holder<HeldType>, PyType, Allocate<HeldAction> >
     : public ConvertToCPPBase<Holder<HeldType>, Allocate<HeldAction> > {
 
     ConvertToCPP() {}
+    virtual ~ConvertToCPP() {}
     
-    void convert(PyObject *src, Holder<HeldType> &dst) const {
+    virtual void convert(PyObject *src, Holder<HeldType> &dst) const {
+      //HeldAction h(5);
       cerr << "Holder!" << endl;
       ConvertToCPPBase<HeldType, HeldAction> &converter(ToCPPDispatch<HeldType, HeldAction>::getConverter(src));
       vector <size_t> dimensions(converter.getSize(src));
