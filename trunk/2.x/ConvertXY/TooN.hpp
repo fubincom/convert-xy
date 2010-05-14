@@ -582,14 +582,57 @@ CONVERTXY_DEFINE_SIMPLE_TYPE_STRING(TooN::ColMajor, "ColMajor")
     }
   };
 
-  /**
-  template <int Size, class ElemType, class Layout, class DefaultBufferAction>
-  struct DefaultToPythonStructure<Vector<Size, ElemType, Layout>, DefaultBufferAction > {
-    typedef DefaultToPythonStructure<ElemType, DefaultBufferAction> ElemClass;
-    typedef typename ElemClass::Structure ElemStructure;
-    typedef PyArray<ElemStructure, Copy<> > Structure;
+  template <int N, class T, class B, class ElemStructure>
+  struct ConvertToPython<Vector<N, T, B>, PyArray<ElemStructure, Copy<> > > {
+    static PyObject* convert(const Vector<N, T, B> &src) {
+      npy_intp dims[] = {src.size()};
+      typedef typename ElemStructure::CType ToElemType;
+      PyObject *dst = PyArray_SimpleNew(1, dims, NumPyType<ToElemType>::numpy_code);
+      if (dst == 0) {
+	throw Py::RuntimeError("error when allocating numpy array!");
+      }
+      
+      PyArrayIterObject* iter = (PyArrayIterObject*)PyArray_IterNew(dst);
+      if (iter == 0) {
+	throw Py::RuntimeError("ToPython<Vector<N, T, B>, NumPyArray>: could not grab iterator!");
+      }
+
+      for (int i = 0; iter->index < iter->size && i < src.size(); i++) {
+	ToElemType *item = (ToElemType*)iter->dataptr;
+	*item = (ToElemType)src[i];
+	PyArray_ITER_NEXT(iter);
+      }
+      return dst;
+    }
   };
-  **/
+
+  template <int M, int N, class T, class B, class ElemStructure>
+  struct ConvertToPython<Matrix<M, N, T, B>, PyArray<ElemStructure, Copy<> > > {
+    static PyObject* convert(const Matrix<M, N, T, B> &src) {
+      npy_intp dims[] = {src.num_rows(), src.num_cols()};
+      typedef typename ElemStructure::CType ToElemType;
+      PyObject *dst = PyArray_SimpleNew(2, dims, NumPyType<ToElemType>::numpy_code);
+      if (dst == 0) {
+	throw Py::RuntimeError("error when allocating numpy array!");
+      }
+      
+      PyArrayIterObject* iter = (PyArrayIterObject*)PyArray_IterNew(dst);
+      if (iter == 0) {
+	throw Py::RuntimeError("ToPython<Matrix<M, N, T, B>, NumPyArray>: could not grab iterator!");
+      }
+
+      for (int i = 0; i < src.num_rows(); i++) {
+	for (int j = 0; iter->index < iter->size && j < src.num_rows(); j++) {
+	  ToElemType *item = (ToElemType*)iter->dataptr;
+	  *item = (ToElemType)src(i, j);
+	  PyArray_ITER_NEXT(iter);
+	}
+      }
+      return dst;
+    }
+  };
+
+
 }
 
 #endif
