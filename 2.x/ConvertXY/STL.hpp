@@ -328,6 +328,25 @@ namespace ConvertXY {
       }
     }
   };
+
+  template <class DefaultBufferAction, class Q, class R>
+  struct DefaultToPythonStructure<std::pair<Q, R>, DefaultBufferAction > {
+    typedef DefaultToPythonStructure<Q, DefaultBufferAction> QClass;
+    typedef DefaultToPythonStructure<R, DefaultBufferAction> RClass;
+    typedef typename QClass::Structure QStructure;
+    typedef typename RClass::Structure RStructure;
+    typedef PyListMulti<QStructure, RStructure, NIL, NIL, NIL, NIL> Structure;
+  };
+
+  template <class Q, class R, class QStructure, class RStructure>
+  struct ConvertToPython<std::pair<Q, R>, PyListMulti<QStructure, RStructure, NIL, NIL, NIL, NIL> > {
+    static PyObject* convert(const std::pair<Q, R> &src) {
+      Py::List list(2);
+      list[0] = Py::Object(ConvertToPython<Q, QStructure>::convert(src.first));
+      list[1] = Py::Object(ConvertToPython<R, RStructure>::convert(src.second));
+      return Py::new_reference_to(list);
+    }
+  };
 }
 
 #ifdef CONVERTXY_CVD_HPP

@@ -85,6 +85,7 @@ namespace PyCPP {
 
     static int initializeGGFE() {
       run("try:\n  import ggfe.image_features\nexcept ImportError:\n  print 'ggfe could not be imported!'");
+      run("try:\n  import ggfe.approximate\nexcept ImportError:\n  print 'ggfe kernel approximators cannot be imported!'");
       run("grammars = {}");
       run("grammars['main'] = ggfe.image_features.get_image_grammar()");
       run("grammars['haar'] = ggfe.image_features.get_haar_grammar()");
@@ -220,6 +221,17 @@ namespace PyCPP {
 	out << "mpl.figure(" << i << ")";
 	run(out.str());
       }
+    }
+
+    template <class P>
+    static void get_conic_kernel(int r, Matrix<-1,-1, P> &out) {
+      ostringstream ostr;
+      ostr << "KERNEL = np.asarray(ggfe.approximate.create_cache(" << r
+	   << ", 'conic'), dtype=np.float)" << endl;
+      run(ostr.str());
+      PyArrayObject *_out = PyCPP::py_cast<PyArrayObject*>(getvar("KERNEL"));
+      convert(_out, out);
+      delvar("KERNEL");
     }
 
     static void show() {

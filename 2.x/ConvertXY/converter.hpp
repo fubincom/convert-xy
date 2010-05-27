@@ -89,11 +89,21 @@ namespace ConvertXY {
   template <class ElemStructure>
   class PyList {};
 
+  template <class Struct1, class Struct2 = NIL, class Struct3 = NIL, class Struct4 = NIL, class Struct5 = NIL, class Struct6 = NIL>
+  class PyListMulti {};
+
+  CONVERTXY_DEFINE_TYPE_STRING_TTTTTT_NIL_ZIP(PyListMulti, "PyListMulti");
+
   template <class ElemStructure>
   class PySet {};
 
   template <class ElemStructure>
   class PyTuple {};
+
+  template <class Struct1, class Struct2 = NIL, class Struct3 = NIL, class Struct4 = NIL, class Struct5 = NIL, class Struct6 = NIL>
+  class PyTupleMulti {};
+
+  CONVERTXY_DEFINE_TYPE_STRING_TTTTTT_NIL_ZIP(PyTupleMulti, "PyTupleMulti");
 
   template <class KeyStructure, class ValueStructure>
   class PyDict {};
