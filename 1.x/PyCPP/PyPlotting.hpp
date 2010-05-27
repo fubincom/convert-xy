@@ -68,6 +68,15 @@ namespace PyCPP {
       return obj;
     }
 
+    static bool hasvar(const string &s) {
+      PyStringObject *_key(0);
+      convert(s, _key);
+      int result = PyDict_Contains(getScope(), (PyObject*)_key);
+      Py_XDECREF(_key);
+      checkPyError();
+      return (bool)result;
+    }
+
     static void delvar(const string &s) {
       PyDict_DelItemString(getScope(), s.c_str());
       checkPyError();
