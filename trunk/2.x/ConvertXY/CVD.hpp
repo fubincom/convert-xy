@@ -246,7 +246,7 @@ namespace ConvertXY {
   };
 
   template <>
-  struct ConvertToPython<ImageRef, Copy<> > {
+  struct ConvertToPython<ImageRef, PyList<PyInt> > {
     static PyObject* convert(const ImageRef &src) {
       Py::List list;
       list[0] = Py::Int(src.y);
