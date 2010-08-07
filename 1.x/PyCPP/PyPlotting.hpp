@@ -326,6 +326,16 @@ namespace PyCPP {
       return cents;
     }
 
+    static vector<ImageRef> parse_bioid_file(const string &fn, const string &kw) {
+      ostringstream ostr;
+      ostr << "centroids = np.array(ggfe.bioid.get_points_by_keyword('"
+	   << fn << "', '" << kw << "'), dtype='i')";
+      vector <ImageRef> cents;
+      convert((PyArrayObject*)getvar("centroids"), cents);
+      run("del centroids");
+      return cents;
+    }
+
     template <class TW>
     static void artificial_hits(const ImageRef &sz, const set<ImageRef> &centers, double hit_spread_max,
 				double dr, double far, int hits_per_detection,
