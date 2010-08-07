@@ -95,6 +95,7 @@ namespace PyCPP {
     static int initializeGGFE() {
       run("try:\n  import ggfe.image_features\nexcept ImportError:\n  print 'ggfe could not be imported!'");
       run("try:\n  import ggfe.approximate\nexcept ImportError:\n  print 'ggfe kernel approximators cannot be imported!'");
+      run("try:\n  import ggfe.bioid\nexcept ImportError:\n  print 'ggfe BioID reader cannot be imported!'");
       run("grammars = {}");
       run("grammars['main'] = ggfe.image_features.get_image_grammar()");
       run("grammars['haar'] = ggfe.image_features.get_haar_grammar()");
