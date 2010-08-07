@@ -330,7 +330,8 @@ namespace PyCPP {
     static vector<ImageRef> parse_bioid_file(const string &fn, const string &kw) {
       ostringstream ostr;
       ostr << "centroids = np.array(ggfe.bioid.get_points_by_keyword('"
-	   << fn << "', '" << kw << "'), dtype='i')";
+	   << fn << "', '" << kw << "'), dtype='i')" << endl;
+      ostr << "centroids = centroids[:,::-1].copy()" << endl;
       run(ostr.str());
       vector <ImageRef> cents;
       convert((PyArrayObject*)getvar("centroids"), cents);
