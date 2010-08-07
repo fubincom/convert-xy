@@ -330,6 +330,7 @@ namespace PyCPP {
       ostringstream ostr;
       ostr << "centroids = np.array(ggfe.bioid.get_points_by_keyword('"
 	   << fn << "', '" << kw << "'), dtype='i')";
+      run(ostr.str());
       vector <ImageRef> cents;
       convert((PyArrayObject*)getvar("centroids"), cents);
       run("del centroids");
