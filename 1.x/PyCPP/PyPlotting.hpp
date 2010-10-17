@@ -111,7 +111,7 @@ namespace PyCPP {
     template <class T>
     static void imshow(const BasicImage <T> &x, string cmap = "") {
       PyObject *_in = 0;
-      convert(x, (PyObject*&)_in);
+      convert(x, (PyArrayObject*&)_in);
       setvar("_in", _in);
       ostringstream out;
       out << "mpl.imshow(_in";
