@@ -111,7 +111,7 @@ namespace PyCPP {
     };
     
     /// A terminal (no template arguments) structure type for the python none object.
-    class None {
+    class Nonen {
       typedef PyObject PyObjectType;
     };
 
