@@ -15,6 +15,9 @@
 #include "PyCVD.hpp"
 #include "PyTooN.hpp"
 #include "PySTL.hpp"
+
+//#include <ConvertXY/STL.hpp>
+
 //#include <CXX/WrapPython.h>
 //#include <CXX/Objects.hxx>
 
@@ -87,6 +90,8 @@ namespace PyCPP {
       import_array1(1);
       //Py::Dict foo;
       run("import matplotlib.pylab as mpl");
+      run("from matplotlib.patches import Ellipse");
+      run("from matplotlib.pylab import figure");
       run("import numpy as np");
       run("from numpy import inf, nan");
       return 0;
@@ -111,7 +116,7 @@ namespace PyCPP {
     template <class T>
     static void imshow(const BasicImage <T> &x, string cmap = "") {
       PyObject *_in = 0;
-      convert(x, (PyArrayObject*&)_in);
+      convert(x, (PyObject*&)_in);
       setvar("_in", _in);
       ostringstream out;
       out << "mpl.imshow(_in";
@@ -121,6 +126,58 @@ namespace PyCPP {
       out << ")";
       run(out.str());
       delvar("_in");
+    }
+
+    static void axis_image() {
+      ostringstream out;
+      out << "mpl.axis('image')";
+      run(out.str());
+    }
+
+    static void hold_on() {
+      ostringstream out;
+      out << "mpl.hold(True)";
+      run(out.str());
+    }
+
+    static void hold_off() {
+      ostringstream out;
+      out << "mpl.hold(False)";
+      run(out.str());
+    }
+
+    static void plot_circles(vector <ImageRef> circles,
+			     vector <double> radii,
+			     double red, double green, double blue, double alpha) {
+      
+
+      ostringstream out;
+
+      out << "ells = []\n"
+	  << "for i in xrange(0, len(pts)):\n"
+	  << "  ells.append(Ellipse(pts[i,::-1], width=radii[i]*2., height=radii[i]*2., angle=0.0))\n"
+	  << "fig = mpl.gcf()\n"
+	  << "ax = mpl.gca()\n"
+	  << "for e in ells:\n"
+	  << "  ax.add_artist(e)\n"
+	  << "  e.set_clip_box(ax.bbox)\n"
+	  << "  e.set_alpha(" << alpha << ")\n"
+	  << "  e.set_facecolor([" << red << "," << green << "," << blue << "])\n";
+
+      PyObject *_circles(0);
+      PyObject *_radii(0);
+
+      convert(circles, (PyArrayObject*&)_circles);
+      convert(radii, (PyObject*&)_radii);
+
+      setvar("pts", _circles);
+      setvar("radii", _radii);
+
+      run(out.str());
+
+      delvar("pts");
+      delvar("radii");
+      delvar("ells");
     }
 
 
@@ -133,6 +190,25 @@ namespace PyCPP {
       delvar("_in");
     }
 
+    static void plot_simple_shapes(const vector <ImageRef> &pts,
+				   const vector <double> &radii,
+				   string shape = "o") {
+      PyObject *_pts = 0;
+      PyObject *_radii = 0;
+      Vector <-1, double> vradii(radii.size());
+      for (size_t i = 0; i < radii.size(); i++) {
+	vradii[i] = 2 * 3.14159 * (radii[i] * radii[i]);
+      }
+      convert(pts, (PyArrayObject*&)_pts);
+      convert(vradii, (PyArrayObject*&)_radii);
+      setvar("_pts", _pts);
+      setvar("_radii", _radii);
+      ostringstream out;
+      out << "mpl.scatter(_pts[:,1], _pts[:,0], marker='o', s=_radii);";
+      run(out.str());
+      delvar("_pts");
+      delvar("_radii");
+    }
 
     static void plot(const vector <ImageRef> &pts, string comp = "") {
       PyObject *_pts = 0;
