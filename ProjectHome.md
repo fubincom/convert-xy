@@ -1,0 +1,3 @@
+This library is a set of C++ headers for interchanging between Python and C++ containers with an emphasis on support for NumPy, TooN, and LIBCVD. It makes heavy use of template-based pattern matching to build conversion functions at compile time. For example, one can convert a list of NumPy matrices to an STL vector of TooN matrices with minimal copying with only a line of C++ code. Each header file in the library is optional; consequently, each dependency (TooN, CVD, NumPy) is also optional.
+
+Note that this template library is covered under the GPL v2 with a special stdc++ exception, which permits the library's use in closed source code under certain conditions.
